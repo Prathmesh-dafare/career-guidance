@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – CareerAI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      body {
+        overflow: hidden;
+      }
+      .auth-layout {
+        height: 100vh;
+      }
+      .auth-left {
+        position: relative;
+        overflow: hidden;
+      }
+      .auth-aurora-1 {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(108, 99, 255, 0.4) 0%,
+          transparent 70%
+        );
+        top: -100px;
+        left: -100px;
+        filter: blur(60px);
+        animation: aurora 6s ease-in-out infinite alternate;
+      }
+      .auth-aurora-2 {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 229, 255, 0.3) 0%,
+          transparent 70%
+        );
+        bottom: 0;
+        right: -50px;
+        filter: blur(50px);
+        animation: aurora 8s ease-in-out infinite alternate-reverse;
+      }
+      .floating-elements {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .float-el {
+        position: absolute;
+        animation: float 4s ease-in-out infinite;
+        font-size: 1.5rem;
+        opacity: 0.4;
+      }
+      .float-el:nth-child(1) {
+        top: 20%;
+        left: 15%;
+        animation-delay: 0s;
+      }
+      .float-el:nth-child(2) {
+        top: 60%;
+        left: 70%;
+        animation-delay: -1.5s;
+      }
+      .float-el:nth-child(3) {
+        top: 80%;
+        left: 20%;
+        animation-delay: -3s;
+      }
+      .float-el:nth-child(4) {
+        top: 40%;
+        left: 80%;
+        animation-delay: -2s;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+      @media (max-width: 900px) {
+        body {
+          overflow: auto;
+        }
+        .auth-layout {
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageLoader" class="page-loader">
+      <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="auth-layout">
+      <!-- Left Side -->
+      <div class="auth-left">
+        <div class="auth-aurora-1"></div>
+        <div class="auth-aurora-2"></div>
+        <div class="floating-elements">
+          <span class="float-el">🚀</span>
+          <span class="float-el">🤖</span>
+          <span class="float-el">📊</span>
+          <span class="float-el">🎯</span>
+        </div>
+        <div class="auth-illustration">
+          <a
+            href="index.html"
+            class="nav-logo"
+            style="justify-content: center; margin-bottom: 32px; display: flex"
+          >
+            <div class="logo-icon">🚀</div>
+            <span
+              style="
+                font-family: var(--font-display);
+                font-size: 1.4rem;
+                font-weight: 800;
+              "
+              ><span class="gradient-text">Career</span>AI</span
+            >
+          </a>
+          <h2>Land Your<br /><span class="gradient-text">Dream Job</span></h2>
+          <p>
+            The AI-powered platform that transforms your career preparation into
+            a systematic, data-driven journey.
+          </p>
+          <div class="auth-features">
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🤖</div>
+              <span>AI Mock Interviews with Real Feedback</span>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">📄</div>
+              <span>Resume Analysis & ATS Optimization</span>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🗺️</div>
+              <span>Personalized 6-Month Career Roadmap</span>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">📈</div>
+              <span>Track Your Growth & Earn Badges</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side -->
+      <div class="auth-right">
+        <div class="auth-form-wrapper">
+          <h1 class="auth-title">Welcome back 👋</h1>
+          <p class="auth-sub">Log into your AI career workspace.</p>
+
+          <form id="loginForm" novalidate>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <div class="form-input-wrap">
+                <span class="form-input-icon">✉️</span>
+                <input
+                  type="email"
+                  class="form-input"
+                  id="email"
+                  placeholder="you@example.com"
+                  autocomplete="email"
+                  required
+                />
+              </div>
+              <span class="form-error" id="emailError"
+                >Please enter a valid email.</span
+              >
+            </div>
+            <div class="form-group">
+              <label
+                class="form-label"
+                style="display: flex; justify-content: space-between"
+              >
+                <span>Password</span>
+                <a
+                  href="#"
+                  style="
+                    color: var(--primary);
+                    font-size: 0.78rem;
+                    text-decoration: none;
+                    font-weight: 600;
+                  "
+                  >Forgot password?</a
+                >
+              </label>
+              <div class="form-input-wrap">
+                <span class="form-input-icon">🔒</span>
+                <input
+                  type="password"
+                  class="form-input"
+                  id="password"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  required
+                />
+              </div>
+              <span class="form-error" id="passwordError"
+                >Password must be at least 6 characters.</span
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-full"
+              id="loginBtn"
+              style="justify-content: center; padding: 14px"
+            >
+              <span id="loginBtnText">🚀 Login to CareerAI</span>
+              <span
+                id="loginSpinner"
+                class="spinner hidden"
+                style="width: 20px; height: 20px; border-width: 2px"
+              ></span>
+            </button>
+          </form>
+
+          <div class="auth-divider"><span>or continue with</span></div>
+          <a
+            href="register.html"
+            class="btn btn-secondary w-full"
+            style="justify-content: center"
+            >Create New Account</a
+          >
+
+          <p class="auth-footer-text">
+            By logging in, you agree to our <a href="#">Terms</a> and
+            <a href="#">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      // Redirect if already logged in
+      if (Auth.token()) window.location.href = "dashboard.html";
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value;
+
+          // Validate
+          let valid = true;
+          if (!/\S+@\S+\.\S+/.test(email)) {
+            document.getElementById("emailError").classList.add("show");
+            valid = false;
+          } else document.getElementById("emailError").classList.remove("show");
+          if (password.length < 1) {
+            document.getElementById("passwordError").classList.add("show");
+            valid = false;
+          } else
+            document.getElementById("passwordError").classList.remove("show");
+          if (!valid) return;
+
+          const btn = document.getElementById("loginBtn");
+          const btnText = document.getElementById("loginBtnText");
+          const spinner = document.getElementById("loginSpinner");
+          btn.disabled = true;
+          btnText.textContent = "Logging in...";
+          spinner.classList.remove("hidden");
+
+          try {
+            const data = await API.post("/auth/login", { email, password });
+            Auth.set(data.token, data.user);
+            Toast.success("Welcome back! 🚀");
+            setTimeout(() => (window.location.href = "dashboard.html"), 800);
+          } catch (err) {
+            Toast.error(err.message || "Login failed");
+            btn.disabled = false;
+            btnText.textContent = "🚀 Login to CareerAI";
+            spinner.classList.add("hidden");
+          }
+        });
+    </script>
+  </body>
+</html>

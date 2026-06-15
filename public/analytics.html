@@ -1,0 +1,1120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Analytics – CareerAI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      .analytics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .analytics-grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .chart-wrapper {
+        position: relative;
+        height: 260px;
+      }
+      .mini-chart-wrapper {
+        position: relative;
+        height: 180px;
+      }
+      .kpi-value {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .kpi-change {
+        font-size: 0.78rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .kpi-change.up {
+        color: var(--success);
+      }
+      .kpi-change.down {
+        color: #fc8181;
+      }
+      .badge-card-full {
+        padding: 20px;
+        text-align: center;
+      }
+      .heatmap-grid {
+        display: grid;
+        grid-template-columns: repeat(13, 1fr);
+        gap: 3px;
+        margin-top: 12px;
+      }
+      .heatmap-cell {
+        aspect-ratio: 1;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+      .heatmap-cell:hover {
+        transform: scale(1.2);
+      }
+      @media (max-width: 900px) {
+        .analytics-grid {
+          grid-template-columns: 1fr;
+        }
+        .analytics-grid-3 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      @media (max-width: 640px) {
+        .analytics-grid-3 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageLoader" class="page-loader">
+      <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <nav class="navbar scrolled">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo"
+          ><div class="logo-icon">🚀</div>
+          <span><span class="gradient-text">Career</span>AI</span></a
+        >
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="font-size: 0.82rem; color: var(--text-muted)"
+            >📊 Analytics</span
+          >
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">Main</div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="sidebar-link"
+            ><span class="sidebar-icon">🏠</span>Dashboard</a
+          >
+          <a href="interview.html" class="sidebar-link"
+            ><span class="sidebar-icon">🎙️</span>Mock Interview</a
+          >
+          <a href="resume.html" class="sidebar-link"
+            ><span class="sidebar-icon">📄</span>Resume Analyzer</a
+          >
+          <a href="roadmap.html" class="sidebar-link"
+            ><span class="sidebar-icon">🗺️</span>Career Roadmap</a
+          >
+          <a href="mentor.html" class="sidebar-link"
+            ><span class="sidebar-icon">🤖</span>AI Mentor</a
+          >
+        </nav>
+        <div class="sidebar-section">Insights</div>
+        <nav class="sidebar-nav">
+          <a href="analytics.html" class="sidebar-link active"
+            ><span class="sidebar-icon">📊</span>Analytics</a
+          >
+        </nav>
+        <div class="sidebar-section">Account</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" data-logout
+            ><span class="sidebar-icon">🚪</span>Logout</a
+          >
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <div class="dash-header">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex-wrap: wrap;
+              gap: 12px;
+            "
+          >
+            <div>
+              <h1 class="dash-greeting">Analytics & Insights 📊</h1>
+              <p class="dash-sub">
+                Track your career preparation progress over time.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <select
+                class="form-input"
+                id="timeRange"
+                style="width: auto; padding: 8px 16px; font-size: 0.82rem"
+              >
+                <option value="week">Last 7 Days</option>
+                <option value="month" selected>Last Month</option>
+                <option value="quarter">Last 3 Months</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="stats-row" style="margin-bottom: 20px">
+          <div class="glass-card stat-widget" data-reveal>
+            <span class="stat-widget-icon">📄</span>
+            <div class="kpi-value gradient-text" id="bestResumeScore">
+              0<span style="font-size: 1.2rem">%</span>
+            </div>
+            <div class="stat-widget-label">Best Resume Score</div>
+            <div class="kpi-change up" style="margin-top: 6px">
+              ↑ +15% this month
+            </div>
+          </div>
+          <div class="glass-card stat-widget" data-reveal data-delay="0.1">
+            <span class="stat-widget-icon">🎙️</span>
+            <div
+              class="kpi-value"
+              style="color: var(--secondary)"
+              id="bestInterviewScore"
+            >
+              0<span style="font-size: 1.2rem">%</span>
+            </div>
+            <div class="stat-widget-label">Best Interview Score</div>
+            <div class="kpi-change up" style="margin-top: 6px">
+              ↑ +22% this month
+            </div>
+          </div>
+          <div class="glass-card stat-widget" data-reveal data-delay="0.3">
+            <span class="stat-widget-icon">�🎙️</span>
+            <div
+              class="kpi-value"
+              style="color: var(--accent)"
+              id="totalInterviews"
+            >
+              0
+            </div>
+            <div class="stat-widget-label">Interviews Completed</div>
+            <div class="kpi-change up" style="margin-top: 6px">
+              ↑ 4 this week
+            </div>
+          </div>
+          <div class="glass-card stat-widget" data-reveal data-delay="0.3">
+            <span class="stat-widget-icon">🔥</span>
+            <div
+              class="kpi-value"
+              style="color: var(--warning)"
+              id="streakDisplay"
+            >
+              0
+            </div>
+            <div class="stat-widget-label">Current Streak</div>
+            <div class="kpi-change up" style="margin-top: 6px">
+              ↑ Personal best!
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Charts Row -->
+        <div class="analytics-grid">
+          <!-- Performance Trend -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">📈</div>
+              Performance Trend
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Skill Radar -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">🕸️</div>
+              Skill Distribution
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="skillRadar"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Charts -->
+        <div class="analytics-grid-3">
+          <!-- Interview by Type -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">🎙️</div>
+              Interviews by Type
+            </div>
+            <div class="mini-chart-wrapper">
+              <canvas id="typeChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Score Distribution -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">📊</div>
+              Score Distribution
+            </div>
+            <div class="mini-chart-wrapper">
+              <canvas id="scoreDistChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Weekly Activity -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">📅</div>
+              Weekly Activity
+            </div>
+            <div class="mini-chart-wrapper">
+              <canvas id="activityChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skill Progress Bars -->
+        <div class="analytics-grid" style="margin-bottom: 20px">
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">⚡</div>
+              Skill Growth Over Time
+            </div>
+            <div style="margin-top: 8px">
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">JavaScript</span
+                  ><span class="progress-value">82%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" data-width="82%"></div>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">React</span
+                  ><span class="progress-value">75%</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    data-width="75%"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        var(--secondary),
+                        #0066ff
+                      );
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">Node.js</span
+                  ><span class="progress-value">68%</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    data-width="68%"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        var(--accent),
+                        #ec4899
+                      );
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">System Design</span
+                  ><span class="progress-value">45%</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    data-width="45%"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        var(--warning),
+                        #f97316
+                      );
+                    "
+                  ></div>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">Data Structures</span
+                  ><span class="progress-value">60%</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    data-width="60%"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        var(--success),
+                        #22d3ee
+                      );
+                    "
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Heatmap -->
+          <div class="glass-card" data-reveal>
+            <div class="widget-title">
+              <div class="widget-title-icon">🗓️</div>
+              Activity Heatmap
+            </div>
+            <p
+              style="
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-bottom: 8px;
+              "
+            >
+              Last 3 months of practice activity
+            </p>
+            <div class="heatmap-grid" id="heatmapGrid"></div>
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 12px;
+                font-size: 0.72rem;
+                color: var(--text-dim);
+              "
+            >
+              <span>Less</span>
+              <div
+                style="
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 2px;
+                  background: rgba(255, 255, 255, 0.05);
+                "
+              ></div>
+              <div
+                style="
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 2px;
+                  background: rgba(108, 99, 255, 0.3);
+                "
+              ></div>
+              <div
+                style="
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 2px;
+                  background: rgba(108, 99, 255, 0.6);
+                "
+              ></div>
+              <div
+                style="
+                  width: 12px;
+                  height: 12px;
+                  border-radius: 2px;
+                  background: rgba(108, 99, 255, 0.9);
+                "
+              ></div>
+              <span>More</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Achievements -->
+        <div class="glass-card" id="badges" data-reveal>
+          <div class="widget-title" style="margin-bottom: 20px">
+            <div class="widget-title-icon">🏆</div>
+            All Achievements
+          </div>
+          <div class="badges-grid" id="allBadgesGrid"></div>
+        </div>
+
+        <!-- Interview History Table -->
+        <div class="glass-card" style="margin-top: 20px" data-reveal>
+          <div class="widget-title" style="margin-bottom: 16px">
+            <div class="widget-title-icon">📋</div>
+            Interview History
+          </div>
+          <div style="overflow-x: auto">
+            <table style="width: 100%; border-collapse: collapse">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border)">
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 10px 12px;
+                      font-size: 0.78rem;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                    "
+                  >
+                    Type
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 10px 12px;
+                      font-size: 0.78rem;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                    "
+                  >
+                    Difficulty
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 10px 12px;
+                      font-size: 0.78rem;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                    "
+                  >
+                    Score
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 10px 12px;
+                      font-size: 0.78rem;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                    "
+                  >
+                    Duration
+                  </th>
+                  <th
+                    style="
+                      text-align: left;
+                      padding: 10px 12px;
+                      font-size: 0.78rem;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                    "
+                  >
+                    Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="interviewTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+      <div class="mobile-nav-inner">
+        <a href="dashboard.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🏠</span>Home</a
+        >
+        <a href="interview.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🎙️</span>Interview</a
+        >
+        <a href="resume.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">📄</span>Resume</a
+        >
+        <a href="roadmap.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🗺️</span>Roadmap</a
+        >
+        <a href="mentor.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🤖</span>Mentor</a
+        >
+      </div>
+    </nav>
+
+    <!-- AI Mentor FAB -->
+    <div class="ai-mentor-fab">
+      <div class="fab-panel" id="mentorPanel">
+        <div class="fab-panel-header">
+          <span>🤖</span><span>AI Career Mentor</span>
+        </div>
+        <div class="fab-messages" id="fabMessages"></div>
+        <div class="fab-input-row">
+          <input
+            class="fab-input"
+            id="fabInput"
+            placeholder="Ask about your progress..."
+          />
+          <button class="fab-send" id="fabSend">➤</button>
+        </div>
+      </div>
+      <button class="fab-btn" id="mentorFab">🤖</button>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      Auth.check();
+
+      const chartDefaults = {
+        color: "rgba(240,244,255,0.7)",
+        borderColor: "rgba(255,255,255,0.06)",
+      };
+      Chart.defaults.color = chartDefaults.color;
+      Chart.defaults.borderColor = chartDefaults.borderColor;
+
+      let trendChart;
+      let radarChart;
+      let typeChart;
+      let scoreChart;
+      let activityChart;
+
+      const heatmap = document.getElementById("heatmapGrid");
+      const heatmapIntensities = [
+        "rgba(255,255,255,0.04)",
+        "rgba(108,99,255,0.2)",
+        "rgba(108,99,255,0.4)",
+        "rgba(108,99,255,0.7)",
+        "rgba(108,99,255,0.95)",
+      ];
+
+      function createAnalyticsCharts() {
+        const trendCtx = document.getElementById("trendChart").getContext("2d");
+        trendChart = new Chart(trendCtx, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Resume Score",
+                data: [],
+                borderColor: "#6C63FF",
+                backgroundColor: "rgba(108,99,255,0.12)",
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: "#6C63FF",
+                pointRadius: 4,
+                borderWidth: 2,
+              },
+              {
+                label: "Interview Score",
+                data: [],
+                borderColor: "#00E5FF",
+                backgroundColor: "rgba(0,229,255,0.08)",
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: "#00E5FF",
+                pointRadius: 4,
+                borderWidth: 2,
+              },
+              {
+                label: "Skill Growth",
+                data: [],
+                borderColor: "#8B5CF6",
+                backgroundColor: "rgba(139,92,246,0.08)",
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: "#8B5CF6",
+                pointRadius: 4,
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "rgba(240,244,255,0.6)",
+                  font: { size: 11 },
+                  boxWidth: 12,
+                },
+              },
+            },
+            scales: {
+              x: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: { color: "rgba(240,244,255,0.5)", font: { size: 10 } },
+              },
+              y: {
+                min: 0,
+                max: 100,
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: {
+                  color: "rgba(240,244,255,0.5)",
+                  font: { size: 10 },
+                  callback: (v) => v + "%",
+                },
+              },
+            },
+            animation: { duration: 1500 },
+          },
+        });
+
+        const radarCtx = document.getElementById("skillRadar").getContext("2d");
+        radarChart = new Chart(radarCtx, {
+          type: "radar",
+          data: {
+            labels: [
+              "Technical",
+              "Communication",
+              "Problem Solving",
+              "Confidence",
+              "Leadership",
+              "Adaptability",
+            ],
+            datasets: [
+              {
+                label: "Current",
+                data: [0, 0, 0, 0, 0, 0],
+                backgroundColor: "rgba(108,99,255,0.2)",
+                borderColor: "rgba(108,99,255,0.8)",
+                pointBackgroundColor: "#00E5FF",
+                borderWidth: 2,
+                pointRadius: 4,
+              },
+              {
+                label: "Target",
+                data: [90, 85, 90, 80, 75, 85],
+                backgroundColor: "rgba(0,229,255,0.06)",
+                borderColor: "rgba(0,229,255,0.4)",
+                borderWidth: 1.5,
+                borderDash: [5, 5],
+                pointRadius: 3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "rgba(240,244,255,0.6)",
+                  font: { size: 11 },
+                  boxWidth: 10,
+                },
+              },
+            },
+            scales: {
+              r: {
+                min: 0,
+                max: 100,
+                ticks: { display: false },
+                grid: { color: "rgba(255,255,255,0.06)" },
+                angleLines: { color: "rgba(255,255,255,0.06)" },
+                pointLabels: {
+                  color: "rgba(240,244,255,0.55)",
+                  font: { size: 10 },
+                },
+              },
+            },
+            animation: { duration: 1500 },
+          },
+        });
+
+        const typeCtx = document.getElementById("typeChart").getContext("2d");
+        typeChart = new Chart(typeCtx, {
+          type: "doughnut",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                data: [],
+                backgroundColor: [
+                  "rgba(108,99,255,0.8)",
+                  "rgba(0,229,255,0.7)",
+                  "rgba(139,92,246,0.7)",
+                  "rgba(245,158,11,0.7)",
+                  "rgba(16,185,129,0.7)",
+                  "rgba(236,72,153,0.7)",
+                ],
+                borderWidth: 0,
+                borderRadius: 3,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "65%",
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  color: "rgba(240,244,255,0.6)",
+                  font: { size: 10 },
+                  boxWidth: 10,
+                  padding: 12,
+                },
+              },
+            },
+            animation: { duration: 1200 },
+          },
+        });
+
+        const scoreCtx = document
+          .getElementById("scoreDistChart")
+          .getContext("2d");
+        scoreChart = new Chart(scoreCtx, {
+          type: "bar",
+          data: {
+            labels: ["40-50", "51-60", "61-70", "71-80", "81-90", "91+"],
+            datasets: [
+              {
+                label: "Interviews",
+                data: [0, 0, 0, 0, 0, 0],
+                backgroundColor: [
+                  "rgba(239,68,68,0.5)",
+                  "rgba(245,158,11,0.5)",
+                  "rgba(234,179,8,0.5)",
+                  "rgba(34,197,94,0.5)",
+                  "rgba(0,229,255,0.6)",
+                  "rgba(108,99,255,0.7)",
+                ],
+                borderRadius: 6,
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: "rgba(240,244,255,0.5)", font: { size: 9 } },
+              },
+              y: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: {
+                  color: "rgba(240,244,255,0.5)",
+                  font: { size: 9 },
+                  stepSize: 1,
+                },
+              },
+            },
+            animation: { duration: 1200 },
+          },
+        });
+
+        const actCtx = document
+          .getElementById("activityChart")
+          .getContext("2d");
+        activityChart = new Chart(actCtx, {
+          type: "bar",
+          data: {
+            labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            datasets: [
+              {
+                label: "Activities",
+                data: [0, 0, 0, 0, 0, 0, 0],
+                backgroundColor: "rgba(108,99,255,0.5)",
+                borderRadius: 6,
+                borderWidth: 0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: { color: "rgba(240,244,255,0.5)", font: { size: 10 } },
+              },
+              y: {
+                grid: { color: "rgba(255,255,255,0.04)" },
+                ticks: {
+                  color: "rgba(240,244,255,0.5)",
+                  font: { size: 10 },
+                  stepSize: 1,
+                },
+              },
+            },
+            animation: { duration: 1200 },
+          },
+        });
+      }
+
+      function renderHeatmap(counts = []) {
+        heatmap.innerHTML = "";
+        counts.forEach((count) => {
+          const cell = document.createElement("div");
+          const level = Math.min(count, heatmapIntensities.length - 1);
+          cell.className = "heatmap-cell";
+          cell.style.background = heatmapIntensities[level];
+          cell.title = `${count} activit${count === 1 ? "y" : "ies"}`;
+          heatmap.appendChild(cell);
+        });
+      }
+
+      function renderInterviewTable(rows = []) {
+        const formatDate = (dateString) => {
+          if (!dateString) return "N/A";
+          const date = new Date(dateString);
+          if (Number.isNaN(date.getTime())) return "N/A";
+          return date.toLocaleDateString(undefined, {
+            month: "short",
+            day: "numeric",
+          });
+        };
+        document.getElementById("interviewTable").innerHTML = rows
+          .map(
+            (row) => `
+  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+    <td style="padding:12px;font-size:0.85rem;font-weight:600;">🎙️ ${row.type}</td>
+    <td style="padding:12px;"><span style="font-size:0.75rem;font-weight:700;padding:3px 10px;background:rgba(255,255,255,0.05);border-radius:50px;color:${diffColors[row.difficulty] || "var(--text-muted)"};">${row.difficulty}</span></td>
+    <td style="padding:12px;"><span style="font-family:var(--font-display);font-weight:800;font-size:1rem;color:${scoreColor(row.score)};">${row.score}%</span></td>
+    <td style="padding:12px;font-size:0.82rem;color:var(--text-muted);">⏱️ ${row.dur}</td>
+    <td style="padding:12px;font-size:0.82rem;color:var(--text-muted);">${formatDate(row.date)}</td>
+  </tr>
+`,
+          )
+          .join("");
+      }
+
+      function updateAnalyticsCharts(data = {}) {
+        if (
+          !trendChart ||
+          !radarChart ||
+          !typeChart ||
+          !scoreChart ||
+          !activityChart
+        )
+          return;
+
+        trendChart.data.labels = data.overviewTrend?.labels || [];
+        trendChart.data.datasets[0].data =
+          data.overviewTrend?.resumeScores || [];
+        trendChart.data.datasets[1].data =
+          data.overviewTrend?.interviewScores || [];
+        trendChart.data.datasets[2].data =
+          data.overviewTrend?.skillScores || [];
+        trendChart.update();
+
+        radarChart.data.datasets[0].data = data.skillRadar?.values || [
+          0, 0, 0, 0, 0, 0,
+        ];
+        radarChart.update();
+
+        typeChart.data.labels = (data.interviewTypeCounts || []).map(
+          (item) => item.label,
+        );
+        typeChart.data.datasets[0].data = (data.interviewTypeCounts || []).map(
+          (item) => item.value,
+        );
+        typeChart.update();
+
+        scoreChart.data.datasets[0].data = data.scoreDistribution?.values || [
+          0, 0, 0, 0, 0, 0,
+        ];
+        scoreChart.update();
+
+        activityChart.data.datasets[0].data = data.weeklyActivity?.counts || [
+          0, 0, 0, 0, 0, 0, 0,
+        ];
+        activityChart.update();
+      }
+
+      createAnalyticsCharts();
+
+      const diffColors = {
+        Beginner: "var(--success)",
+        Intermediate: "var(--warning)",
+        Advanced: "#fc8181",
+      };
+      const scoreColor = (s) =>
+        s >= 80 ? "var(--success)" : s >= 60 ? "var(--warning)" : "#fc8181";
+
+      renderInterviewTable([]);
+
+      function buildBadges(data) {
+        const resumeScore = Number(data.bestResumeScore || 0);
+        const interviewScore = Number(data.bestInterviewScore || 0);
+        const xp = Number(data.xp || 0);
+        const streak = Number(data.streak || 0);
+        const totalInterviews = Number(data.totalInterviews || 0);
+        const totalResumes = Number(data.totalResumes || 0);
+        const radarValues = data.skillRadar?.values || [];
+        const problemSolving = Number(radarValues[2] || 0);
+        const avgSkill =
+          radarValues.length > 0
+            ? radarValues.reduce((sum, v) => sum + Number(v || 0), 0) /
+              radarValues.length
+            : 0;
+        const interviewTypes = new Set(
+          (data.interviewTypeCounts || []).map((entry) =>
+            String(entry.label || "").toLowerCase(),
+          ),
+        );
+        const hasInterviewType = (needle) =>
+          [...interviewTypes].some((type) => type.includes(needle));
+
+        return [
+          {
+            name: "First Interview",
+            icon: "🎙️",
+            desc: "Completed first mock",
+            locked: totalInterviews < 1,
+          },
+          {
+            name: "Resume Master",
+            icon: "📄",
+            desc: "Score above 85%",
+            locked: resumeScore < 85,
+          },
+          {
+            name: "7-Day Streak",
+            icon: "🔥",
+            desc: "7 days in a row",
+            locked: streak < 7,
+          },
+          {
+            name: "Interview Champion",
+            icon: "🏆",
+            desc: "Score 90%+",
+            locked: interviewScore < 90,
+          },
+          {
+            name: "Career Strategist",
+            icon: "🗺️",
+            desc: "Generate roadmap",
+            locked: totalResumes < 1 || totalInterviews < 1,
+          },
+          {
+            name: "Full Stack Ready",
+            icon: "💻",
+            desc: "Full stack interview",
+            locked: !hasInterviewType("full"),
+          },
+          {
+            name: "Rising Star",
+            icon: "⭐",
+            desc: "Reach 1000 XP",
+            locked: xp < 1000,
+          },
+          {
+            name: "AI Native",
+            icon: "🤖",
+            desc: "Chat 10x with mentor",
+            locked: true,
+          },
+          {
+            name: "Consistent Learner",
+            icon: "📚",
+            desc: "30-day streak",
+            locked: streak < 30,
+          },
+          {
+            name: "Problem Solver",
+            icon: "🧩",
+            desc: "Ace DSA interview",
+            locked: problemSolving < 75,
+          },
+          {
+            name: "Quick Learner",
+            icon: "⚡",
+            desc: "Skill up 50%",
+            locked: avgSkill < 50,
+          },
+          {
+            name: "Network Builder",
+            icon: "🤝",
+            desc: "Complete HR round",
+            locked: !hasInterviewType("hr") && !hasInterviewType("behavioral"),
+          },
+        ];
+      }
+
+      function renderBadges(data) {
+        const badges = buildBadges(data);
+        document.getElementById("allBadgesGrid").innerHTML = badges
+          .map(
+            (b) => `
+  <div class="glass-card badge-card ${b.locked ? "locked" : "unlocked"}">
+    <span class="badge-emoji">${b.icon}</span>
+    <div class="badge-name">${b.name}</div>
+    <div class="badge-desc">${b.desc}</div>
+    ${!b.locked ? '<div style="font-size:0.68rem;color:var(--success);margin-top:6px;font-weight:700;">✅ UNLOCKED</div>' : ""}
+  </div>
+`,
+          )
+          .join("");
+      }
+
+      // Progress bars
+      setTimeout(animateProgressBars, 400);
+
+      // Load analytics from API
+      async function loadAnalytics() {
+        try {
+          const res = await fetch(`${API.BASE}/overview`, {
+            headers: {
+              Authorization: `Bearer ${Auth.token()}`,
+            },
+          });
+
+          if (!res.ok) {
+            throw new Error(`Overview fetch failed (${res.status})`);
+          }
+
+          const data = await res.json();
+
+          document.getElementById("bestResumeScore").textContent =
+            `${data.bestResumeScore || 0}%`;
+
+          document.getElementById("bestInterviewScore").textContent =
+            `${data.bestInterviewScore || 0}%`;
+
+          document.getElementById("totalInterviews").textContent =
+            data.totalInterviews || 0;
+
+          document.getElementById("streakDisplay").textContent =
+            typeof data.streak === "number" ? data.streak : 0;
+
+          updateAnalyticsCharts(data);
+          renderHeatmap(data.activityHeatmap || []);
+          renderInterviewTable(data.recentInterviews || []);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      loadAnalytics();
+    </script>
+  </body>
+</html>

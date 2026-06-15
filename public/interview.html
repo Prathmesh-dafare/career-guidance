@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mock Interview – CareerAI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      .interview-stages {
+        display: none;
+      }
+      .interview-stages.active {
+        display: block;
+      }
+      #stage-setup {
+        display: block;
+      }
+      .setup-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .feedback-scores {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .feedback-score-card {
+        text-align: center;
+        padding: 20px;
+      }
+      .score-num {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 800;
+      }
+      .score-lbl {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+      .feedback-item {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .feedback-strength {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .feedback-weak {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.15);
+      }
+      .feedback-sugg {
+        background: rgba(108, 99, 255, 0.08);
+        border: 1px solid rgba(108, 99, 255, 0.15);
+      }
+      .question-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .filter-btn {
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .filter-btn.active {
+        background: rgba(108, 99, 255, 0.15);
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .search-bar {
+        width: 100%;
+        padding: 10px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--text);
+        font-family: var(--font-body);
+        font-size: 0.88rem;
+        outline: none;
+        margin-bottom: 16px;
+      }
+      .search-bar:focus {
+        border-color: var(--primary);
+      }
+      @media (max-width: 640px) {
+        .setup-grid {
+          grid-template-columns: 1fr;
+        }
+        .feedback-scores {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageLoader" class="page-loader">
+      <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <nav class="navbar scrolled">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo"
+          ><div class="logo-icon">🚀</div>
+          <span><span class="gradient-text">Career</span>AI</span></a
+        >
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="font-size: 0.82rem; color: var(--text-muted)"
+            >🎙️ Mock Interview</span
+          >
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">Main</div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="sidebar-link"
+            ><span class="sidebar-icon">🏠</span>Dashboard</a
+          >
+          <a href="interview.html" class="sidebar-link active"
+            ><span class="sidebar-icon">🎙️</span>Mock Interview</a
+          >
+          <a href="resume.html" class="sidebar-link"
+            ><span class="sidebar-icon">📄</span>Resume Analyzer</a
+          >
+          <a href="roadmap.html" class="sidebar-link"
+            ><span class="sidebar-icon">🗺️</span>Career Roadmap</a
+          >
+          <a href="mentor.html" class="sidebar-link"
+            ><span class="sidebar-icon">🤖</span>AI Mentor</a
+          >
+        </nav>
+        <div class="sidebar-section">Insights</div>
+        <nav class="sidebar-nav">
+          <a href="analytics.html" class="sidebar-link"
+            ><span class="sidebar-icon">📊</span>Analytics</a
+          >
+          <a href="#questions" class="sidebar-link"
+            ><span class="sidebar-icon">📚</span>Question Bank</a
+          >
+        </nav>
+        <div class="sidebar-section">Account</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" data-logout
+            ><span class="sidebar-icon">🚪</span>Logout</a
+          >
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <!-- Tabs -->
+        <div
+          style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap"
+        >
+          <button
+            class="btn btn-primary btn-sm"
+            onclick="showTab('interview')"
+            id="tab-interview"
+          >
+            🎙️ Mock Interview
+          </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="showTab('questions')"
+            id="tab-questions"
+          >
+            📚 Question Bank
+          </button>
+        </div>
+
+        <!-- INTERVIEW TAB -->
+        <div id="tab-interview-content">
+          <!-- Stage: Setup -->
+          <div class="interview-stages active" id="stage-setup">
+            <div class="dash-header">
+              <h1 class="dash-greeting">AI Mock Interview 🎙️</h1>
+              <p class="dash-sub">
+                Practice with an AI interviewer that adapts to your responses in
+                real time.
+              </p>
+            </div>
+            <div class="setup-grid">
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">💼</div>
+                  Interview Type
+                </div>
+                <div class="select-grid" id="typeGrid">
+                  <div class="select-option selected" data-value="frontend">
+                    ⚛️ Frontend
+                  </div>
+                  <div class="select-option" data-value="backend">
+                    ⚙️ Backend
+                  </div>
+                  <div class="select-option" data-value="fullstack">
+                    🌐 Full Stack
+                  </div>
+                  <div class="select-option" data-value="react">⚛️ React</div>
+                  <div class="select-option" data-value="nodejs">
+                    🟢 Node.js
+                  </div>
+                  <div class="select-option" data-value="python">🐍 Python</div>
+                  <div class="select-option" data-value="java">☕ Java</div>
+                  <div class="select-option" data-value="dsa">🧩 DSA</div>
+                  <div class="select-option" data-value="hr">👔 HR Round</div>
+                </div>
+              </div>
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">⚡</div>
+                  Difficulty Level
+                </div>
+                <div class="select-grid" id="diffGrid">
+                  <div class="select-option selected" data-value="beginner">
+                    🌱 Beginner
+                  </div>
+                  <div class="select-option" data-value="intermediate">
+                    ⚡ Intermediate
+                  </div>
+                  <div class="select-option" data-value="advanced">
+                    🔥 Advanced
+                  </div>
+                </div>
+                <div
+                  style="
+                    margin-top: 24px;
+                    padding: 16px;
+                    background: rgba(108, 99, 255, 0.06);
+                    border: 1px solid rgba(108, 99, 255, 0.15);
+                    border-radius: 12px;
+                  "
+                >
+                  <div
+                    style="
+                      font-size: 0.82rem;
+                      font-weight: 700;
+                      margin-bottom: 8px;
+                      font-family: var(--font-display);
+                    "
+                  >
+                    Interview Tips 💡
+                  </div>
+                  <ul
+                    style="
+                      font-size: 0.8rem;
+                      color: var(--text-muted);
+                      line-height: 2;
+                      list-style: none;
+                    "
+                  >
+                    <li>✅ Think aloud as you solve problems</li>
+                    <li>✅ Ask clarifying questions</li>
+                    <li>✅ Mention time & space complexity</li>
+                    <li>✅ Stay calm and structured</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center">
+              <button class="btn btn-glow btn-lg" id="startInterviewBtn">
+                🚀 Start AI Interview
+              </button>
+            </div>
+          </div>
+
+          <!-- Stage: Interview -->
+          <div class="interview-stages" id="stage-interview">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+                gap: 12px;
+              "
+            >
+              <div>
+                <h2
+                  style="
+                    font-family: var(--font-display);
+                    font-weight: 800;
+                    font-size: 1.3rem;
+                  "
+                  id="interviewTitle"
+                >
+                  Frontend Interview
+                </h2>
+                <p
+                  style="font-size: 0.82rem; color: var(--text-muted)"
+                  id="interviewSubtitle"
+                >
+                  Intermediate · AI-powered · Adaptive questions
+                </p>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center">
+                <div
+                  style="
+                    padding: 6px 14px;
+                    background: rgba(16, 185, 129, 0.1);
+                    border: 1px solid rgba(16, 185, 129, 0.2);
+                    border-radius: 50px;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    color: var(--success);
+                  "
+                  id="questionCounter"
+                >
+                  Q 0/10
+                </div>
+                <div
+                  style="
+                    padding: 6px 14px;
+                    background: rgba(245, 158, 11, 0.1);
+                    border: 1px solid rgba(245, 158, 11, 0.2);
+                    border-radius: 50px;
+                    font-size: 0.78rem;
+                    font-weight: 700;
+                    color: var(--warning);
+                  "
+                  id="interviewTimer"
+                >
+                  00:00
+                </div>
+                <button class="btn btn-secondary btn-sm" id="endInterviewBtn">
+                  End Interview
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="glass-card" style="padding: 0; overflow: hidden">
+              <div class="chat-messages" id="chatMessages"></div>
+              <div class="chat-input-area">
+                <textarea
+                  class="chat-input"
+                  id="chatInput"
+                  placeholder="Type your answer here... (Press Enter to send, Shift+Enter for new line)"
+                  rows="1"
+                ></textarea>
+                <button
+                  class="btn btn-primary"
+                  id="sendBtn"
+                  style="align-self: flex-end; padding: 12px 20px"
+                >
+                  Send ➤
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stage: Feedback -->
+          <div class="interview-stages" id="stage-feedback">
+            <div class="dash-header">
+              <h1 class="dash-greeting">Interview Complete! 🎉</h1>
+              <p class="dash-sub">
+                Here's your AI-powered performance analysis.
+              </p>
+            </div>
+            <div class="feedback-scores">
+              <div class="glass-card feedback-score-card">
+                <div class="score-circle" style="margin: 0 auto 12px">
+                  <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle class="score-circle-bg" cx="50" cy="50" r="45" />
+                    <circle
+                      class="score-circle-fill"
+                      id="commCircle"
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="url(#grad1)"
+                    />
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%">
+                        <stop offset="0%" style="stop-color: #6c63ff" />
+                        <stop offset="100%" style="stop-color: #00e5ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="score-circle-value" id="commScore">0%</div>
+                </div>
+                <div class="score-lbl">Communication</div>
+              </div>
+              <div class="glass-card feedback-score-card">
+                <div class="score-circle" style="margin: 0 auto 12px">
+                  <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle class="score-circle-bg" cx="50" cy="50" r="45" />
+                    <circle
+                      class="score-circle-fill"
+                      id="techCircle"
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="url(#grad2)"
+                    />
+                    <defs>
+                      <linearGradient id="grad2" x1="0%" y1="0%" x2="100%">
+                        <stop offset="0%" style="stop-color: #00e5ff" />
+                        <stop offset="100%" style="stop-color: #0066ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="score-circle-value" id="techScore">0%</div>
+                </div>
+                <div class="score-lbl">Technical</div>
+              </div>
+              <div class="glass-card feedback-score-card">
+                <div class="score-circle" style="margin: 0 auto 12px">
+                  <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle class="score-circle-bg" cx="50" cy="50" r="45" />
+                    <circle
+                      class="score-circle-fill"
+                      id="confCircle"
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="url(#grad3)"
+                    />
+                    <defs>
+                      <linearGradient id="grad3" x1="0%" y1="0%" x2="100%">
+                        <stop offset="0%" style="stop-color: #8b5cf6" />
+                        <stop offset="100%" style="stop-color: #ec4899" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="score-circle-value" id="confScore">0%</div>
+                </div>
+                <div class="score-lbl">Confidence</div>
+              </div>
+              <div class="glass-card feedback-score-card">
+                <div class="score-circle" style="margin: 0 auto 12px">
+                  <svg viewBox="0 0 100 100" width="100" height="100">
+                    <circle class="score-circle-bg" cx="50" cy="50" r="45" />
+                    <circle
+                      class="score-circle-fill"
+                      id="psCircle"
+                      cx="50"
+                      cy="50"
+                      r="45"
+                      stroke="url(#grad4)"
+                    />
+                    <defs>
+                      <linearGradient id="grad4" x1="0%" y1="0%" x2="100%">
+                        <stop offset="0%" style="stop-color: #10b981" />
+                        <stop offset="100%" style="stop-color: #22d3ee" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div class="score-circle-value" id="psScore">0%</div>
+                </div>
+                <div class="score-lbl">Problem Solving</div>
+              </div>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 20px;
+              "
+              id="feedbackDetails"
+            >
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">💪</div>
+                  Strengths
+                </div>
+                <div id="strengthsList"></div>
+              </div>
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">⚠️</div>
+                  Areas to Improve
+                </div>
+                <div id="weaknessesList"></div>
+              </div>
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">💡</div>
+                  Suggestions
+                </div>
+                <div id="suggestionsList"></div>
+              </div>
+            </div>
+
+            <div
+              style="
+                text-align: center;
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                flex-wrap: wrap;
+              "
+            >
+              <button class="btn btn-primary btn-lg" id="retryBtn">
+                🔄 Practice Again
+              </button>
+              <a href="dashboard.html" class="btn btn-secondary btn-lg"
+                >📊 View Dashboard</a
+              >
+              <a href="roadmap.html" class="btn btn-secondary btn-lg"
+                >🗺️ Career Roadmap</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- QUESTIONS TAB -->
+        <div id="tab-questions-content" style="display: none" id="questions">
+          <div class="dash-header">
+            <h1 class="dash-greeting">Question Bank 📚</h1>
+            <p class="dash-sub">
+              AI-generated interview questions across all categories and
+              difficulty levels.
+            </p>
+          </div>
+          <div class="glass-card" style="margin-bottom: 20px">
+            <input
+              class="search-bar"
+              id="searchInput"
+              placeholder="🔍 Search questions..."
+            />
+            <div class="question-filters" id="categoryFilters">
+              <button class="filter-btn active" data-cat="frontend">
+                ⚛️ Frontend
+              </button>
+              <button class="filter-btn" data-cat="backend">⚙️ Backend</button>
+              <button class="filter-btn" data-cat="dsa">🧩 DSA</button>
+              <button class="filter-btn" data-cat="react">⚛️ React</button>
+              <button class="filter-btn" data-cat="nodejs">🟢 Node.js</button>
+              <button class="filter-btn" data-cat="python">🐍 Python</button>
+              <button class="filter-btn" data-cat="hr">👔 HR</button>
+            </div>
+            <div class="question-filters">
+              <button class="filter-btn active" data-diff="all">All</button>
+              <button class="filter-btn" data-diff="beginner">
+                🌱 Beginner
+              </button>
+              <button class="filter-btn" data-diff="intermediate">
+                ⚡ Intermediate
+              </button>
+              <button class="filter-btn" data-diff="advanced">
+                🔥 Advanced
+              </button>
+            </div>
+            <button class="btn btn-primary btn-sm" id="generateQBtn">
+              🤖 Generate Questions
+            </button>
+          </div>
+          <div id="questionsList">
+            <div
+              style="
+                text-align: center;
+                padding: 40px;
+                color: var(--text-muted);
+              "
+            >
+              <div style="font-size: 3rem; margin-bottom: 12px">📚</div>
+              <p>
+                Click "Generate Questions" to load AI-powered questions for the
+                selected category.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+      <div class="mobile-nav-inner">
+        <a href="dashboard.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🏠</span>Home</a
+        >
+        <a href="interview.html" class="mobile-nav-item active"
+          ><span class="mobile-nav-icon">🎙️</span>Interview</a
+        >
+        <a href="resume.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">📄</span>Resume</a
+        >
+        <a href="roadmap.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🗺️</span>Roadmap</a
+        >
+        <a href="mentor.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🤖</span>Mentor</a
+        >
+      </div>
+    </nav>
+
+    <!-- AI Mentor FAB -->
+    <div class="ai-mentor-fab">
+      <div class="fab-panel" id="mentorPanel">
+        <div class="fab-panel-header">
+          <span>🤖</span><span>AI Career Mentor</span>
+        </div>
+        <div class="fab-messages" id="fabMessages"></div>
+        <div class="fab-input-row">
+          <input
+            class="fab-input"
+            id="fabInput"
+            placeholder="Ask a career question..."
+          />
+          <button class="fab-send" id="fabSend">➤</button>
+        </div>
+      </div>
+      <button class="fab-btn" id="mentorFab">🤖</button>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      Auth.check();
+
+      let selectedType = "frontend";
+      let selectedDiff = "beginner";
+      let interviewHistory = [];
+      let interviewSessionId = null;
+      let questionCount = 0;
+      let timerInterval = null;
+      let timerSecs = 0;
+      let isWaiting = false;
+
+      // Tab switching
+      function showTab(tab) {
+        document.getElementById("tab-interview-content").style.display =
+          tab === "interview" ? "block" : "none";
+        document.getElementById("tab-questions-content").style.display =
+          tab === "questions" ? "block" : "none";
+        document.getElementById("tab-interview").className =
+          tab === "interview"
+            ? "btn btn-primary btn-sm"
+            : "btn btn-secondary btn-sm";
+        document.getElementById("tab-questions").className =
+          tab === "questions"
+            ? "btn btn-primary btn-sm"
+            : "btn btn-secondary btn-sm";
+      }
+
+      // Type/diff selection
+      document
+        .getElementById("typeGrid")
+        .querySelectorAll(".select-option")
+        .forEach((opt) => {
+          opt.addEventListener("click", () => {
+            document
+              .getElementById("typeGrid")
+              .querySelectorAll(".select-option")
+              .forEach((o) => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            selectedType = opt.dataset.value;
+          });
+        });
+
+      document
+        .getElementById("diffGrid")
+        .querySelectorAll(".select-option")
+        .forEach((opt) => {
+          opt.addEventListener("click", () => {
+            document
+              .getElementById("diffGrid")
+              .querySelectorAll(".select-option")
+              .forEach((o) => o.classList.remove("selected"));
+            opt.classList.add("selected");
+            selectedDiff = opt.dataset.value;
+          });
+        });
+
+      // Start interview
+      document
+        .getElementById("startInterviewBtn")
+        .addEventListener("click", async () => {
+          showStage("interview");
+          document.getElementById("interviewTitle").textContent =
+            `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Interview`;
+          document.getElementById("interviewSubtitle").textContent =
+            `${selectedDiff.charAt(0).toUpperCase() + selectedDiff.slice(1)} · AI-powered · Adaptive`;
+          startTimer();
+          interviewHistory = [];
+          questionCount = 0;
+          document.getElementById("chatMessages").innerHTML = "";
+
+          try {
+            const res = await fetch(`${API.BASE}/interview/start`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Auth.token()}`,
+              },
+              body: JSON.stringify({
+                type: selectedType,
+                difficulty: selectedDiff,
+              }),
+            });
+            const data = await res.json();
+            interviewSessionId = data.sessionId || null;
+          } catch (err) {
+            console.error("Interview session start failed:", err);
+            interviewSessionId = null;
+          }
+
+          await askNextQuestion();
+        });
+
+      function startTimer() {
+        timerSecs = 0;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          timerSecs++;
+          const m = String(Math.floor(timerSecs / 60)).padStart(2, "0");
+          const s = String(timerSecs % 60).padStart(2, "0");
+          document.getElementById("interviewTimer").textContent = `${m}:${s}`;
+        }, 1000);
+      }
+
+      function showStage(stage) {
+        document
+          .querySelectorAll(".interview-stages")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(`stage-${stage}`).classList.add("active");
+      }
+
+      function addMessage(role, content) {
+        const msgs = document.getElementById("chatMessages");
+        const div = document.createElement("div");
+        div.className = `message ${role}`;
+        div.innerHTML = `
+    <div class="msg-avatar ${role === "ai" ? "ai-avatar" : "user-avatar-msg"}">${role === "ai" ? "🤖" : "👤"}</div>
+    <div class="msg-content ${role === "ai" ? "ai-msg" : "user-msg"}">${content.replace(/\n/g, "<br>")}</div>
+  `;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+        interviewHistory.push({ role, content });
+      }
+
+      function showTyping() {
+        const msgs = document.getElementById("chatMessages");
+        const div = document.createElement("div");
+        div.className = "message ai";
+        div.id = "typingIndicator";
+        div.innerHTML = `<div class="msg-avatar ai-avatar">🤖</div><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function removeTyping() {
+        document.getElementById("typingIndicator")?.remove();
+      }
+
+      async function askNextQuestion() {
+        if (questionCount >= 10) {
+          endInterview();
+          return;
+        }
+        questionCount++;
+        document.getElementById("questionCounter").textContent =
+          `Q ${questionCount}/10`;
+        isWaiting = true;
+        showTyping();
+        try {
+          const history = interviewHistory.slice(-4);
+          const res = await fetch(`${API.BASE}/ai/interview/question`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Auth.token()}`,
+            },
+            body: JSON.stringify({
+              type: selectedType,
+              difficulty: selectedDiff,
+              history,
+            }),
+          });
+          const data = await res.json();
+          removeTyping();
+          const questionText =
+            data.question || "Could you tell me about your experience?";
+          addMessage("ai", questionText);
+          if (interviewSessionId) {
+            saveInterviewMessage(questionText, "ai").catch((err) =>
+              console.warn("Failed to save AI question:", err),
+            );
+          }
+        } catch {
+          removeTyping();
+          addMessage(
+            "ai",
+            "Tell me about a challenging project you've worked on recently.",
+          );
+        }
+        isWaiting = false;
+      }
+
+      async function sendAnswer() {
+        if (isWaiting) return;
+        const input = document.getElementById("chatInput");
+        const answer = input.value.trim();
+        if (!answer) return;
+        input.value = "";
+        input.style.height = "auto";
+        addMessage("user", answer);
+        if (interviewSessionId) {
+          saveInterviewMessage(answer).catch((err) =>
+            console.warn("Failed to save interview message:", err),
+          );
+        }
+        await askNextQuestion();
+      }
+
+      async function saveInterviewMessage(message, role = "user") {
+        if (!interviewSessionId) return;
+        await fetch(`${API.BASE}/interview/message`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Auth.token()}`,
+          },
+          body: JSON.stringify({
+            sessionId: interviewSessionId,
+            message,
+            role,
+          }),
+        });
+      }
+
+      document.getElementById("sendBtn").addEventListener("click", sendAnswer);
+      document.getElementById("chatInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendAnswer();
+        }
+      });
+      document
+        .getElementById("chatInput")
+        .addEventListener("input", function () {
+          this.style.height = "auto";
+          this.style.height = Math.min(this.scrollHeight, 120) + "px";
+        });
+      document
+        .getElementById("endInterviewBtn")
+        .addEventListener("click", endInterview);
+      document.getElementById("retryBtn").addEventListener("click", () => {
+        clearInterval(timerInterval);
+        showStage("setup");
+      });
+
+      async function endInterview() {
+        clearInterval(timerInterval);
+        showStage("feedback");
+        if (interviewHistory.length < 2) {
+          showDemoFeedback({
+            communication: 75,
+            technical: 80,
+            confidence: 70,
+            problemSolving: 78,
+            overall: 76,
+            strengths: ["Good structure", "Clear answers"],
+            weaknesses: ["More detail needed"],
+            suggestions: ["Practice daily", "Study edge cases"],
+          });
+          return;
+        }
+        const transcript = interviewHistory
+          .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+          .join("\n");
+        try {
+          const res = await fetch(`${API.BASE}/ai/interview/feedback`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Auth.token()}`,
+            },
+            body: JSON.stringify({
+              transcript,
+              type: selectedType,
+              difficulty: selectedDiff,
+            }),
+          });
+          const feedback = await res.json();
+          showDemoFeedback(feedback);
+          if (interviewSessionId) {
+            try {
+              await fetch(`${API.BASE}/interview/end`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${Auth.token()}`,
+                },
+                body: JSON.stringify({
+                  sessionId: interviewSessionId,
+                  feedback,
+                }),
+              });
+            } catch (err) {
+              console.error("Interview save failed:", err);
+            }
+          }
+        } catch {
+          const fallbackFeedback = {
+            communication: 72,
+            technical: 78,
+            confidence: 65,
+            problemSolving: 75,
+            strengths: ["Good problem decomposition"],
+            weaknesses: ["Could elaborate more"],
+            suggestions: [
+              "Practice explaining aloud",
+              "Review data structures",
+            ],
+          };
+          showDemoFeedback(fallbackFeedback);
+          if (interviewSessionId) {
+            try {
+              await fetch(`${API.BASE}/interview/end`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${Auth.token()}`,
+                },
+                body: JSON.stringify({
+                  sessionId: interviewSessionId,
+                  feedback: fallbackFeedback,
+                }),
+              });
+            } catch (err) {
+              console.error("Interview save failed:", err);
+            }
+          }
+        }
+      }
+
+      function showDemoFeedback(fb) {
+        const circles = [
+          {
+            el: document.getElementById("commCircle"),
+            val: fb.communication || 72,
+            score: "commScore",
+          },
+          {
+            el: document.getElementById("techCircle"),
+            val: fb.technical || 78,
+            score: "techScore",
+          },
+          {
+            el: document.getElementById("confCircle"),
+            val: fb.confidence || 65,
+            score: "confScore",
+          },
+          {
+            el: document.getElementById("psCircle"),
+            val: fb.problemSolving || 75,
+            score: "psScore",
+          },
+        ];
+        circles.forEach(({ el, val, score }) => {
+          const circumference = 283;
+          const offset = circumference - (val / 100) * circumference;
+          setTimeout(() => {
+            el.style.strokeDashoffset = offset;
+            el.style.transition = "stroke-dashoffset 2s ease";
+          }, 100);
+          animateCounter(document.getElementById(score), val, 1800, "%");
+        });
+
+        const renderList = (id, items, cls) => {
+          const el = document.getElementById(id);
+          el.innerHTML = (items || [])
+            .map(
+              (s) =>
+                `<div class="feedback-item ${cls}"><span>${cls.includes("strength") ? "✅" : cls.includes("weak") ? "⚠️" : "💡"}</span>${s}</div>`,
+            )
+            .join("");
+        };
+        renderList("strengthsList", fb.strengths, "feedback-strength");
+        renderList("weaknessesList", fb.weaknesses, "feedback-weak");
+        renderList("suggestionsList", fb.suggestions, "feedback-sugg");
+      }
+
+      // Question Bank
+      const categoryFilters = document.getElementById("categoryFilters");
+      let activeCategory = "frontend";
+      let activeDiff = "all";
+
+      categoryFilters.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          categoryFilters
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeCategory = btn.dataset.cat;
+        });
+      });
+
+      document.querySelectorAll("[data-diff]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll("[data-diff]")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeDiff = btn.dataset.diff;
+        });
+      });
+
+      document
+        .getElementById("generateQBtn")
+        .addEventListener("click", async () => {
+          const list = document.getElementById("questionsList");
+          list.innerHTML =
+            '<div style="text-align:center;padding:40px;"><div class="spinner" style="margin:0 auto;"></div><p style="margin-top:12px;color:var(--text-muted);">Generating AI questions...</p></div>';
+          try {
+            const diff = activeDiff === "all" ? "intermediate" : activeDiff;
+            const res = await fetch(`${API.BASE}/ai/questions`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${Auth.token()}`,
+              },
+              body: JSON.stringify({
+                category: activeCategory,
+                difficulty: diff,
+                count: 8,
+              }),
+            });
+            const questions = await res.json();
+            renderQuestions(questions);
+          } catch {
+            list.innerHTML =
+              '<div style="text-align:center;padding:40px;color:var(--text-muted);">Failed to load questions. Please try again.</div>';
+          }
+        });
+
+      function renderQuestions(questions) {
+        const list = document.getElementById("questionsList");
+        if (!questions || !questions.length) {
+          list.innerHTML =
+            '<p style="color:var(--text-muted);text-align:center;padding:40px;">No questions found.</p>';
+          return;
+        }
+        list.innerHTML = questions
+          .map(
+            (q, i) => `
+    <div class="glass-card question-card" onclick="toggleAnswer(this)">
+      <div class="question-card-header">
+        <span style="color:var(--text-muted);font-size:0.78rem;font-weight:700;">Q${i + 1}</span>
+        <span class="question-text">${q.question}</span>
+        <span class="diff-badge diff-${q.difficulty}">${q.difficulty}</span>
+        <button style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:4px;" onclick="event.stopPropagation();this.style.color='var(--warning)';" title="Bookmark">🔖</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:0;">${(q.tags || []).map((t) => `<span style="font-size:0.7rem;padding:3px 8px;background:rgba(255,255,255,0.06);border-radius:50px;color:var(--text-dim);">${t}</span>`).join("")}</div>
+      <div class="question-answer">${q.answer || "Click to reveal the model answer."}</div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function toggleAnswer(card) {
+        card.classList.toggle("expanded");
+      }
+
+      // Search
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll(".question-card").forEach((card) => {
+          const text = card
+            .querySelector(".question-text")
+            ?.textContent.toLowerCase();
+          card.style.display = text?.includes(q) ? "block" : "none";
+        });
+      });
+    </script>
+  </body>
+</html>

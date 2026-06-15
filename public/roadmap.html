@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Roadmap – CareerAI</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      .roadmap-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .gap-result-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .priority-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.85rem;
+      }
+      .priority-rank {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+      .resource-item {
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      @media (max-width: 640px) {
+        .roadmap-form {
+          grid-template-columns: 1fr;
+        }
+        .gap-result-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="pageLoader" class="page-loader">
+      <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+    <div id="toastContainer" class="toast-container"></div>
+
+    <nav class="navbar scrolled">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo"
+          ><div class="logo-icon">🚀</div>
+          <span><span class="gradient-text">Career</span>AI</span></a
+        >
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="font-size: 0.82rem; color: var(--text-muted)"
+            >🗺️ Career Planning</span
+          >
+          <button class="btn btn-secondary btn-sm" data-logout>Logout</button>
+        </div>
+      </div>
+    </nav>
+
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">Main</div>
+        <nav class="sidebar-nav">
+          <a href="dashboard.html" class="sidebar-link"
+            ><span class="sidebar-icon">🏠</span>Dashboard</a
+          >
+          <a href="interview.html" class="sidebar-link"
+            ><span class="sidebar-icon">🎙️</span>Mock Interview</a
+          >
+          <a href="resume.html" class="sidebar-link"
+            ><span class="sidebar-icon">📄</span>Resume Analyzer</a
+          >
+          <a href="roadmap.html" class="sidebar-link active"
+            ><span class="sidebar-icon">🗺️</span>Career Roadmap</a
+          >
+          <a href="mentor.html" class="sidebar-link"
+            ><span class="sidebar-icon">🤖</span>AI Mentor</a
+          >
+        </nav>
+        <div class="sidebar-section">Insights</div>
+        <nav class="sidebar-nav">
+          <a href="analytics.html" class="sidebar-link"
+            ><span class="sidebar-icon">📊</span>Analytics</a
+          >
+        </nav>
+        <div class="sidebar-section">Account</div>
+        <nav class="sidebar-nav">
+          <a href="#" class="sidebar-link" data-logout
+            ><span class="sidebar-icon">🚪</span>Logout</a
+          >
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <!-- Tabs -->
+        <div
+          style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap"
+        >
+          <button
+            class="btn btn-primary btn-sm"
+            onclick="showTab('roadmap')"
+            id="tab-roadmap-btn"
+          >
+            🗺️ Career Roadmap
+          </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            onclick="showTab('skillgap')"
+            id="tab-skillgap-btn"
+          >
+            🎯 Skill Gap Analyzer
+          </button>
+        </div>
+
+        <!-- ROADMAP TAB -->
+        <div id="tab-roadmap">
+          <div class="dash-header">
+            <h1 class="dash-greeting">Career Roadmap 🗺️</h1>
+            <p class="dash-sub">
+              Get a personalized AI-generated 6-month learning plan tailored to
+              your goals.
+            </p>
+          </div>
+
+          <!-- Input Form -->
+          <div id="roadmapForm" class="glass-card" style="margin-bottom: 20px">
+            <div class="widget-title">
+              <div class="widget-title-icon">⚙️</div>
+              Generate Your Roadmap
+            </div>
+            <div class="roadmap-form">
+              <div class="form-group">
+                <label class="form-label"
+                  >Current Skills (comma separated)</label
+                >
+                <input
+                  type="text"
+                  class="form-input"
+                  id="currentSkills"
+                  placeholder="HTML, CSS, JavaScript, React basics"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target Role</label>
+                <select class="form-input" id="targetRole">
+                  <option value="">Select target role...</option>
+                  <option value="Full Stack Developer">
+                    Full Stack Developer
+                  </option>
+                  <option value="Frontend Developer">Frontend Developer</option>
+                  <option value="Backend Developer">Backend Developer</option>
+                  <option value="React Developer">React Developer</option>
+                  <option value="Node.js Developer">Node.js Developer</option>
+                  <option value="Data Scientist">Data Scientist</option>
+                  <option value="DevOps Engineer">DevOps Engineer</option>
+                  <option value="Mobile Developer">Mobile Developer</option>
+                  <option value="Software Engineer at FAANG">
+                    Software Engineer at FAANG
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+              "
+            >
+              <button class="btn btn-primary" id="generateRoadmapBtn">
+                🤖 Generate AI Roadmap
+              </button>
+              <button class="btn btn-secondary btn-sm" id="demoRoadmapBtn">
+                🎯 Try Demo
+              </button>
+            </div>
+          </div>
+
+          <!-- Loading -->
+          <div id="roadmapLoading" style="display: none">
+            <div class="glass-card">
+              <div
+                class="scanning-animation"
+                style="text-align: center; padding: 60px"
+              >
+                <span
+                  style="
+                    font-size: 3.5rem;
+                    animation: scanPulse 1.5s ease-in-out infinite;
+                    display: block;
+                    margin-bottom: 20px;
+                  "
+                  >🗺️</span
+                >
+                <h3
+                  style="
+                    font-family: var(--font-display);
+                    font-size: 1.2rem;
+                    margin-bottom: 8px;
+                  "
+                >
+                  Generating your roadmap...
+                </h3>
+                <p
+                  style="color: var(--text-muted); font-size: 0.85rem"
+                  id="roadmapStatus"
+                >
+                  Analyzing your skills and goals...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roadmap Output -->
+          <div id="roadmapOutput" style="display: none">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+                gap: 12px;
+              "
+            >
+              <div>
+                <h2
+                  style="
+                    font-family: var(--font-display);
+                    font-weight: 800;
+                    font-size: 1.3rem;
+                  "
+                  id="roadmapTitle"
+                >
+                  Your Career Roadmap
+                </h2>
+                <p
+                  style="font-size: 0.82rem; color: var(--text-muted)"
+                  id="roadmapSummary"
+                ></p>
+              </div>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                <div
+                  style="
+                    padding: 6px 14px;
+                    background: rgba(0, 229, 255, 0.1);
+                    border: 1px solid rgba(0, 229, 255, 0.2);
+                    border-radius: 50px;
+                    font-size: 0.78rem;
+                    color: var(--secondary);
+                    font-weight: 700;
+                  "
+                  id="roadmapTime"
+                ></div>
+                <button
+                  class="btn btn-secondary btn-sm"
+                  onclick="
+                    document.getElementById('roadmapForm').style.display =
+                      'block';
+                    document.getElementById('roadmapOutput').style.display =
+                      'none';
+                  "
+                >
+                  🔄 Regenerate
+                </button>
+              </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="glass-card" style="margin-bottom: 20px">
+              <div class="widget-title">
+                <div class="widget-title-icon">📅</div>
+                6-Month Learning Timeline
+              </div>
+              <div class="roadmap-timeline" id="roadmapTimeline"></div>
+            </div>
+
+            <!-- Resources -->
+            <div class="glass-card">
+              <div class="widget-title">
+                <div class="widget-title-icon">📚</div>
+                Recommended Resources
+              </div>
+              <div
+                id="roadmapResources"
+                style="display: flex; flex-wrap: wrap; gap: 10px"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SKILL GAP TAB -->
+        <div id="tab-skillgap" style="display: none" id="skillgap">
+          <div class="dash-header">
+            <h1 class="dash-greeting">Skill Gap Analyzer 🎯</h1>
+            <p class="dash-sub">
+              Discover exactly what skills you're missing to land your target
+              role.
+            </p>
+          </div>
+
+          <div class="glass-card" style="margin-bottom: 20px">
+            <div class="widget-title">
+              <div class="widget-title-icon">🔍</div>
+              Analyze Your Skill Gap
+            </div>
+            <div class="roadmap-form">
+              <div class="form-group">
+                <label class="form-label">Your Current Skills</label>
+                <textarea
+                  class="form-input"
+                  id="gap-skills"
+                  rows="3"
+                  placeholder="JavaScript, React, CSS, Git, REST APIs..."
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target Job Role</label>
+                <input
+                  type="text"
+                  class="form-input"
+                  id="gap-role"
+                  placeholder="e.g. Full Stack Developer at Google"
+                />
+              </div>
+            </div>
+            <button class="btn btn-primary" id="analyzeGapBtn">
+              🤖 Analyze My Skill Gap
+            </button>
+          </div>
+
+          <!-- Gap Loading -->
+          <div id="gapLoading" style="display: none">
+            <div class="glass-card" style="text-align: center; padding: 60px">
+              <div class="spinner" style="margin: 0 auto 16px"></div>
+              <p style="color: var(--text-muted)">
+                Analyzing skill gaps with AI...
+              </p>
+            </div>
+          </div>
+
+          <!-- Gap Results -->
+          <div id="gapResults" style="display: none">
+            <!-- Readiness Score -->
+            <div
+              class="glass-card"
+              style="margin-bottom: 20px; text-align: center"
+            >
+              <div class="widget-title" style="justify-content: center">
+                <div class="widget-title-icon">📊</div>
+                Current Readiness Score
+              </div>
+              <div
+                style="
+                  font-family: var(--font-display);
+                  font-size: 4rem;
+                  font-weight: 800;
+                  margin: 16px 0;
+                "
+                id="readinessScore"
+              >
+                <span class="gradient-text">0%</span>
+              </div>
+              <div
+                style="font-size: 0.85rem; color: var(--text-muted)"
+                id="gapTimeline"
+              >
+                Estimated time to job-ready: —
+              </div>
+              <div
+                class="progress-bar"
+                style="max-width: 400px; margin: 16px auto 0; height: 8px"
+              >
+                <div
+                  class="progress-fill"
+                  id="readinessFill"
+                  data-width="0%"
+                ></div>
+              </div>
+            </div>
+
+            <div class="gap-result-grid">
+              <!-- Present Skills -->
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">✅</div>
+                  Skills You Have
+                </div>
+                <div
+                  id="presentSkills"
+                  style="
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                    margin-top: 8px;
+                  "
+                ></div>
+              </div>
+
+              <!-- Missing Skills -->
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">❌</div>
+                  Missing Skills
+                </div>
+                <div id="missingSkillsList" style="margin-top: 8px"></div>
+              </div>
+            </div>
+
+            <div class="gap-result-grid" style="margin-top: 20px">
+              <!-- Learning Path -->
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">📋</div>
+                  Learning Path
+                </div>
+                <div id="learningPath" style="margin-top: 8px"></div>
+              </div>
+
+              <!-- Resources -->
+              <div class="glass-card">
+                <div class="widget-title">
+                  <div class="widget-title-icon">🔗</div>
+                  Free Learning Resources
+                </div>
+                <div id="gapResources" style="margin-top: 8px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Nav -->
+    <nav class="mobile-nav">
+      <div class="mobile-nav-inner">
+        <a href="dashboard.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🏠</span>Home</a
+        >
+        <a href="interview.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🎙️</span>Interview</a
+        >
+        <a href="resume.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">📄</span>Resume</a
+        >
+        <a href="roadmap.html" class="mobile-nav-item active"
+          ><span class="mobile-nav-icon">🗺️</span>Roadmap</a
+        >
+        <a href="mentor.html" class="mobile-nav-item"
+          ><span class="mobile-nav-icon">🤖</span>Mentor</a
+        >
+      </div>
+    </nav>
+
+    <!-- AI Mentor FAB -->
+    <div class="ai-mentor-fab">
+      <div class="fab-panel" id="mentorPanel">
+        <div class="fab-panel-header">
+          <span>🤖</span><span>AI Career Mentor</span>
+        </div>
+        <div class="fab-messages" id="fabMessages"></div>
+        <div class="fab-input-row">
+          <input
+            class="fab-input"
+            id="fabInput"
+            placeholder="Ask about your career path..."
+          />
+          <button class="fab-send" id="fabSend">➤</button>
+        </div>
+      </div>
+      <button class="fab-btn" id="mentorFab">🤖</button>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      Auth.check();
+
+      function showTab(tab) {
+        document.getElementById("tab-roadmap").style.display =
+          tab === "roadmap" ? "block" : "none";
+        document.getElementById("tab-skillgap").style.display =
+          tab === "skillgap" ? "block" : "none";
+        document.getElementById("tab-roadmap-btn").className =
+          tab === "roadmap"
+            ? "btn btn-primary btn-sm"
+            : "btn btn-secondary btn-sm";
+        document.getElementById("tab-skillgap-btn").className =
+          tab === "skillgap"
+            ? "btn btn-primary btn-sm"
+            : "btn btn-secondary btn-sm";
+      }
+
+      // Check URL hash for skill gap
+      if (window.location.hash === "#skillgap") showTab("skillgap");
+
+      // Roadmap generation
+      document
+        .getElementById("generateRoadmapBtn")
+        .addEventListener("click", generateRoadmap);
+      document
+        .getElementById("demoRoadmapBtn")
+        .addEventListener("click", () => {
+          document.getElementById("currentSkills").value =
+            "HTML, CSS, JavaScript, React basics";
+          document.getElementById("targetRole").value = "Full Stack Developer";
+          generateRoadmap();
+        });
+
+      const roadmapMsgs = [
+        "Analyzing your skills and goals...",
+        "Planning learning milestones...",
+        "Curating resources...",
+        "Finalizing your roadmap...",
+      ];
+
+      async function generateRoadmap() {
+        const skills = document.getElementById("currentSkills").value.trim();
+        const role = document.getElementById("targetRole").value;
+        if (!skills || !role) {
+          Toast.error("Please fill in both fields.");
+          return;
+        }
+
+        document.getElementById("roadmapForm").style.display = "none";
+        document.getElementById("roadmapLoading").style.display = "block";
+        document.getElementById("roadmapOutput").style.display = "none";
+
+        let i = 0;
+        const interval = setInterval(() => {
+          document.getElementById("roadmapStatus").textContent =
+            roadmapMsgs[i++ % roadmapMsgs.length];
+        }, 1500);
+
+        try {
+          const res = await fetch(`${API.BASE}/ai/roadmap`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Auth.token()}`,
+            },
+            body: JSON.stringify({
+              currentSkills: skills.split(",").map((s) => s.trim()),
+              targetRole: role,
+            }),
+          });
+          const data = await res.json();
+          clearInterval(interval);
+          showRoadmap(data);
+        } catch {
+          clearInterval(interval);
+          Toast.error("Failed to generate roadmap. Try again.");
+          document.getElementById("roadmapForm").style.display = "block";
+          document.getElementById("roadmapLoading").style.display = "none";
+        }
+      }
+
+      function showRoadmap(data) {
+        document.getElementById("roadmapLoading").style.display = "none";
+        document.getElementById("roadmapOutput").style.display = "block";
+        document.getElementById("roadmapTitle").textContent =
+          data.title || "Your Career Roadmap";
+        document.getElementById("roadmapSummary").textContent =
+          data.summary || "";
+        document.getElementById("roadmapTime").textContent =
+          `⏰ ${data.estimatedTime || "15-20 hrs/week"}`;
+
+        const timeline = document.getElementById("roadmapTimeline");
+        const colors = [
+          "#6C63FF",
+          "#00E5FF",
+          "#8B5CF6",
+          "#10b981",
+          "#f59e0b",
+          "#ec4899",
+        ];
+        timeline.innerHTML = (data.months || [])
+          .map(
+            (m, i) => `
+    <div class="timeline-item" style="animation-delay:${i * 0.1}s;">
+      <div class="timeline-dot" style="background:${colors[i % colors.length]};box-shadow:0 0 12px ${colors[i % colors.length]}80;"></div>
+      <div class="timeline-month">Month ${m.month}</div>
+      <div class="timeline-title">${m.title}</div>
+      <div class="timeline-focus">📌 Focus: ${m.focus}</div>
+      <div class="timeline-tasks">
+        ${(m.tasks || []).map((t) => `<div class="timeline-task"><div class="timeline-task-dot"></div>${t}</div>`).join("")}
+      </div>
+      <div class="timeline-milestone">🎯 Milestone: ${m.milestone}</div>
+    </div>
+  `,
+          )
+          .join("");
+
+        const resources = document.getElementById("roadmapResources");
+        resources.innerHTML = (data.resources || [])
+          .map(
+            (r) => `
+    <div style="padding:8px 16px;background:rgba(108,99,255,0.08);border:1px solid rgba(108,99,255,0.2);border-radius:50px;font-size:0.82rem;font-weight:600;color:var(--primary);">📚 ${r}</div>
+  `,
+          )
+          .join("");
+
+        Toast.success("Roadmap generated! 🗺️");
+      }
+
+      // Skill Gap
+      document
+        .getElementById("analyzeGapBtn")
+        .addEventListener("click", analyzeGap);
+
+      async function analyzeGap() {
+        const skills = document.getElementById("gap-skills").value.trim();
+        const role = document.getElementById("gap-role").value.trim();
+        if (!skills || !role) {
+          Toast.error("Please enter your skills and target role.");
+          return;
+        }
+
+        document.getElementById("gapLoading").style.display = "block";
+        document.getElementById("gapResults").style.display = "none";
+
+        try {
+          const res = await fetch(`${API.BASE}/ai/skillgap`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Auth.token()}`,
+            },
+            body: JSON.stringify({ currentSkills: skills, targetRole: role }),
+          });
+          const data = await res.json();
+          document.getElementById("gapLoading").style.display = "none";
+          showGapResults(data);
+        } catch {
+          document.getElementById("gapLoading").style.display = "none";
+          Toast.error("Analysis failed. Please try again.");
+        }
+      }
+
+      function showGapResults(data) {
+        document.getElementById("gapResults").style.display = "block";
+
+        const score = data.readinessScore || 55;
+        document.getElementById("readinessScore").innerHTML =
+          `<span class="gradient-text">${score}%</span>`;
+        document.getElementById("gapTimeline").textContent =
+          `⏰ Estimated time to job-ready: ${data.timeline || "4-6 months"}`;
+        document
+          .getElementById("readinessFill")
+          .setAttribute("data-width", score + "%");
+        setTimeout(animateProgressBars, 100);
+
+        document.getElementById("presentSkills").innerHTML = (
+          data.presentSkills || []
+        )
+          .map((s) => `<span class="skill-tag skill-tag-present">✓ ${s}</span>`)
+          .join("");
+
+        const priorities = { high: "🔴", medium: "🟡", low: "🟢" };
+        document.getElementById("missingSkillsList").innerHTML = (
+          data.missingSkills || []
+        )
+          .map(
+            (s) => `
+    <div class="priority-item">
+      <div class="priority-rank" style="background:${s.priority === "high" ? "rgba(239,68,68,0.15)" : s.priority === "medium" ? "rgba(245,158,11,0.15)" : "rgba(16,185,129,0.15)"};color:${s.priority === "high" ? "#fc8181" : s.priority === "medium" ? "var(--warning)" : "var(--success)"};">
+        ${priorities[s.priority] || "🟡"}
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:600;">${s.skill}</div>
+        <div style="font-size:0.72rem;color:var(--text-muted);">⏱️ ~${s.timeToLearn}</div>
+      </div>
+      <span class="skill-tag skill-tag-${s.priority}" style="font-size:0.7rem;padding:3px 8px;">${s.priority} priority</span>
+    </div>
+  `,
+          )
+          .join("");
+
+        document.getElementById("learningPath").innerHTML = (
+          data.learningPath || []
+        )
+          .map(
+            (step, i) => `
+    <div class="priority-item">
+      <div class="priority-rank" style="background:rgba(108,99,255,0.15);color:var(--primary);">${i + 1}</div>
+      <span>${step}</span>
+    </div>
+  `,
+          )
+          .join("");
+
+        document.getElementById("gapResources").innerHTML = (
+          data.resources || []
+        )
+          .map(
+            (r) => `
+    <div class="resource-item">
+      <span style="font-size:1rem;">📚</span>
+      <div style="flex:1;">
+        <div style="font-weight:600;">${r.name}</div>
+        <div style="font-size:0.72rem;color:var(--success);">✅ ${r.type}</div>
+      </div>
+      <a href="${r.url}" target="_blank" style="font-size:0.75rem;color:var(--primary);text-decoration:none;font-weight:600;" rel="noopener">Visit →</a>
+    </div>
+  `,
+          )
+          .join("");
+
+        Toast.success(`Analysis complete! Readiness: ${score}%`);
+      }
+    </script>
+  </body>
+</html>

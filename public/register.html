@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – CareerAI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    body { overflow: hidden; }
+    .auth-layout { height: 100vh; }
+    .auth-left { position: relative; overflow: hidden; }
+    .auth-aurora-1 { position: absolute; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%); top: -100px; right: -100px; filter: blur(60px); animation: aurora 6s ease-in-out infinite alternate; }
+    .auth-aurora-2 { position: absolute; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,0.3) 0%, transparent 70%); bottom: 50px; left: -50px; filter: blur(50px); animation: aurora 9s ease-in-out infinite alternate-reverse; }
+    .floating-elements { position: absolute; inset: 0; pointer-events: none; }
+    .float-el { position: absolute; animation: float 4s ease-in-out infinite; font-size: 1.5rem; opacity: 0.35; }
+    .float-el:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+    .float-el:nth-child(2) { top: 55%; left: 75%; animation-delay: -1.5s; }
+    .float-el:nth-child(3) { top: 75%; left: 25%; animation-delay: -3s; }
+    .float-el:nth-child(4) { top: 35%; left: 85%; animation-delay: -2s; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @media (max-width: 900px) { body { overflow: auto; } .auth-layout { height: auto; } }
+    .password-strength { margin-top: 8px; }
+    .strength-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .strength-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease, background 0.4s ease; width: 0%; }
+    .strength-label { font-size: 0.72rem; margin-top: 4px; color: var(--text-dim); }
+  </style>
+</head>
+<body>
+<div id="pageLoader" class="page-loader">
+  <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+  <div class="loader-bar"><div class="loader-fill"></div></div>
+</div>
+<div id="toastContainer" class="toast-container"></div>
+
+<div class="auth-layout">
+  <!-- Left Side -->
+  <div class="auth-left">
+    <div class="auth-aurora-1"></div>
+    <div class="auth-aurora-2"></div>
+    <div class="floating-elements">
+      <span class="float-el">🏆</span>
+      <span class="float-el">💡</span>
+      <span class="float-el">⚡</span>
+      <span class="float-el">🎯</span>
+    </div>
+    <div class="auth-illustration">
+      <a href="index.html" class="nav-logo" style="justify-content:center;margin-bottom:32px;display:flex;">
+        <div class="logo-icon">🚀</div>
+        <span style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;"><span class="gradient-text">Career</span>AI</span>
+      </a>
+      <h2>Start Your<br><span class="gradient-text">Career Journey</span></h2>
+      <p>Join thousands of developers using AI to ace interviews and accelerate their careers.</p>
+      <div class="auth-features">
+        <div class="auth-feature"><div class="auth-feature-icon">🆓</div><span>100% Free — No credit card ever</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">⚡</div><span>Setup in under 2 minutes</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">🤖</div><span>Instant AI-powered feedback</span></div>
+        <div class="auth-feature"><div class="auth-feature-icon">🔒</div><span>Your data is private & secure</span></div>
+      </div>
+      <!-- Stats -->
+      <div style="display:flex;gap:24px;margin-top:36px;justify-content:center;">
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:#fff;">50K+</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Active Users</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:#fff;">94%</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">Success Rate</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:#fff;">4.9★</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);">User Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side -->
+  <div class="auth-right">
+    <div class="auth-form-wrapper">
+      <h1 class="auth-title">Create Account 🚀</h1>
+      <p class="auth-sub">Start your AI-powered career journey today.</p>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">👤</span>
+            <input type="text" class="form-input" id="name" placeholder="John Doe" autocomplete="name" required>
+          </div>
+          <span class="form-error" id="nameError">Please enter your full name.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">✉️</span>
+            <input type="email" class="form-input" id="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <span class="form-error" id="emailError">Please enter a valid email address.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">🔒</span>
+            <input type="password" class="form-input" id="password" placeholder="Min 6 characters" autocomplete="new-password" required>
+          </div>
+          <div class="password-strength">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-label" id="strengthLabel">Enter a password</div>
+          </div>
+          <span class="form-error" id="passwordError">Password must be at least 6 characters.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Role <span style="color:var(--text-dim);font-weight:400;">(optional)</span></label>
+          <div class="form-input-wrap">
+            <span class="form-input-icon">🎯</span>
+            <input type="text" class="form-input" id="targetRole" placeholder="e.g. Full Stack Developer" autocomplete="off">
+          </div>
+        </div>
+
+        <div style="margin-bottom:20px;display:flex;gap:10px;align-items:flex-start;">
+          <input type="checkbox" id="terms" style="margin-top:3px;accent-color:var(--primary);">
+          <label for="terms" style="font-size:0.82rem;color:var(--text-muted);cursor:pointer;">
+            I agree to the <a href="#" style="color:var(--primary);text-decoration:none;">Terms of Service</a> and <a href="#" style="color:var(--primary);text-decoration:none;">Privacy Policy</a>
+          </label>
+        </div>
+        <span class="form-error" id="termsError" style="margin-bottom:12px;display:none;">You must agree to the terms.</span>
+
+        <button type="submit" class="btn btn-primary w-full" id="registerBtn" style="justify-content:center;padding:14px;">
+          <span id="registerBtnText">🚀 Create Free Account</span>
+          <span id="registerSpinner" class="spinner hidden" style="width:20px;height:20px;border-width:2px;"></span>
+        </button>
+      </form>
+
+      <div class="auth-divider"><span>already have an account?</span></div>
+      <a href="login.html" class="btn btn-secondary w-full" style="justify-content:center;">Login Instead</a>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+if (Auth.token()) window.location.href = 'dashboard.html';
+
+// Password strength
+document.getElementById('password').addEventListener('input', function() {
+  const val = this.value;
+  const fill = document.getElementById('strengthFill');
+  const label = document.getElementById('strengthLabel');
+  let strength = 0;
+  if (val.length >= 6) strength++;
+  if (val.length >= 10) strength++;
+  if (/[A-Z]/.test(val)) strength++;
+  if (/[0-9]/.test(val)) strength++;
+  if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+  const configs = [
+    { width: '0%', color: 'transparent', text: 'Enter a password' },
+    { width: '20%', color: '#ef4444', text: 'Very weak' },
+    { width: '40%', color: '#f97316', text: 'Weak' },
+    { width: '60%', color: '#eab308', text: 'Fair' },
+    { width: '80%', color: '#22c55e', text: 'Strong' },
+    { width: '100%', color: '#10b981', text: '💪 Very Strong!' },
+  ];
+  const cfg = configs[strength] || configs[0];
+  fill.style.width = cfg.width;
+  fill.style.background = cfg.color;
+  label.textContent = cfg.text;
+  label.style.color = cfg.color;
+});
+
+document.getElementById('registerForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const targetRole = document.getElementById('targetRole').value.trim();
+  const terms = document.getElementById('terms').checked;
+
+  let valid = true;
+  if (name.length < 2) { document.getElementById('nameError').classList.add('show'); valid = false; }
+  else document.getElementById('nameError').classList.remove('show');
+  if (!/\S+@\S+\.\S+/.test(email)) { document.getElementById('emailError').classList.add('show'); valid = false; }
+  else document.getElementById('emailError').classList.remove('show');
+  if (password.length < 6) { document.getElementById('passwordError').classList.add('show'); valid = false; }
+  else document.getElementById('passwordError').classList.remove('show');
+  if (!terms) {
+    document.getElementById('termsError').style.display = 'block';
+    valid = false;
+  } else document.getElementById('termsError').style.display = 'none';
+  if (!valid) return;
+
+  const btn = document.getElementById('registerBtn');
+  btn.disabled = true;
+  document.getElementById('registerBtnText').textContent = 'Creating account...';
+  document.getElementById('registerSpinner').classList.remove('hidden');
+
+  try {
+    const data = await API.post('/auth/register', { name, email, password, targetRole });
+    Auth.set(data.token, data.user);
+    Toast.success('Account created! Welcome to CareerAI 🚀');
+    setTimeout(() => window.location.href = 'dashboard.html', 900);
+  } catch (err) {
+    Toast.error(err.message || 'Registration failed');
+    btn.disabled = false;
+    document.getElementById('registerBtnText').textContent = '🚀 Create Free Account';
+    document.getElementById('registerSpinner').classList.add('hidden');
+  }
+});
+</script>
+</body>
+</html>

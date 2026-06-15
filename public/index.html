@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CareerAI – AI-Powered Interview & Career Preparation Platform. Practice interviews, analyze resumes, build career roadmaps."
+    />
+    <title>CareerAI – AI Career Operating System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" />
+    <style>
+      .trusted-bar {
+        padding: 32px 24px;
+        text-align: center;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.01);
+      }
+      .trusted-label {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-bottom: 24px;
+      }
+      .trusted-logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      .trusted-logo {
+        font-family: var(--font-display);
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-dim);
+        letter-spacing: 0.08em;
+        transition: color 0.2s;
+      }
+      .trusted-logo:hover {
+        color: var(--text-muted);
+      }
+      .cta-section {
+        text-align: center;
+        padding: 100px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-section::before {
+        content: "";
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(108, 99, 255, 0.2) 0%,
+          transparent 70%
+        );
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+      }
+      .cta-inner {
+        position: relative;
+        z-index: 1;
+      }
+      .cta-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: 20px;
+      }
+      .nav-auth-links {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .xp-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: rgba(108, 99, 255, 0.15);
+        border: 1px solid rgba(108, 99, 255, 0.25);
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+    </style>
+  </head>
+  <body class="no-overflow">
+    <!-- Page Loader -->
+    <div id="pageLoader" class="page-loader">
+      <div class="loader-logo"><span class="gradient-text">Career</span>AI</div>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+          <div class="logo-icon">🚀</div>
+          <span><span class="gradient-text">Career</span>AI</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#features">✨ Features</a></li>
+          <li><a href="#how">⚙️ How it Works</a></li>
+          <li><a href="#faq">❓ FAQ</a></li>
+        </ul>
+        <div class="nav-actions nav-auth-links" id="navActions">
+          <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+          <a href="register.html" class="btn btn-primary btn-sm"
+            >Get Started Free</a
+          >
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <div class="drawer-overlay"></div>
+      <div class="drawer-content">
+        <button
+          id="closeDrawer"
+          style="
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.4rem;
+            cursor: pointer;
+          "
+        >
+          ✕
+        </button>
+        <div style="margin-bottom: 32px">
+          <div class="nav-logo">
+            <div class="logo-icon">🚀</div>
+            <span><span class="gradient-text">Career</span>AI</span>
+          </div>
+        </div>
+        <nav style="display: flex; flex-direction: column; gap: 4px">
+          <a href="#features" class="sidebar-link">✨ Features</a>
+          <a href="#how" class="sidebar-link">⚙️ How it Works</a>
+          <a href="#faq" class="sidebar-link">❓ FAQ</a>
+        </nav>
+        <div
+          style="
+            margin-top: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+          "
+        >
+          <a
+            href="login.html"
+            class="btn btn-secondary w-full"
+            style="justify-content: center"
+            >Login</a
+          >
+          <a
+            href="register.html"
+            class="btn btn-primary w-full"
+            style="justify-content: center"
+            >Get Started Free</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+      <div class="hero-bg">
+        <div class="aurora aurora-1"></div>
+        <div class="aurora aurora-2"></div>
+        <div class="aurora aurora-3"></div>
+        <canvas class="particles-canvas" id="heroParticles"></canvas>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge" data-reveal>
+          <div class="hero-badge-dot"></div>
+          🤖 Powered by Groq AI
+        </div>
+        <h1 data-reveal data-delay="0.1">
+          Your Personal<br />
+          <span class="gradient-text">AI Career Coach</span>
+        </h1>
+        <p class="hero-sub" data-reveal data-delay="0.2">
+          Analyze resumes, practice interviews, receive AI feedback, and build
+          your personalized career roadmap — all in one futuristic platform.
+        </p>
+        <div class="hero-actions" data-reveal data-delay="0.3">
+          <a href="register.html" class="btn btn-glow btn-lg"
+            >🚀 Start Preparing Free</a
+          >
+        </div>
+        <div class="hero-stats" data-reveal data-delay="0.4">
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="50000">0</span>
+            <span class="hero-stat-label">Users Preparing</span>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="94" data-suffix="%"
+              >0%</span
+            >
+            <span class="hero-stat-label">Interview Success Rate</span>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="10000">0</span>
+            <span class="hero-stat-label">Questions Generated</span>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span class="hero-stat-num" data-count="4.9" data-suffix="★"
+              >0★</span
+            >
+            <span class="hero-stat-label">User Rating</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUSTED BAR -->
+    <div class="trusted-bar">
+      <p class="trusted-label">
+        Loved by students from top companies & universities
+      </p>
+      <div class="trusted-logos">
+        <span class="trusted-logo">GOOGLE</span>
+        <span class="trusted-logo">MICROSOFT</span>
+        <span class="trusted-logo">AMAZON</span>
+        <span class="trusted-logo">META</span>
+        <span class="trusted-logo">STARTUP</span>
+        <span class="trusted-logo">MIT</span>
+        <span class="trusted-logo">STANFORD</span>
+      </div>
+    </div>
+
+    <!-- FEATURES SECTION -->
+    <section class="section" id="features">
+      <div class="section-header">
+        <span class="section-label" data-reveal>Everything you need</span>
+        <h2 class="section-title" data-reveal data-delay="0.1">
+          Your Complete <span class="gradient-text">Career Arsenal</span>
+        </h2>
+        <p class="section-desc" data-reveal data-delay="0.2">
+          From resume analysis to mock interviews, we've got every step of your
+          career journey covered.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="glass-card feature-card" data-reveal data-delay="0">
+          <div class="feature-icon feature-icon-1">🤖</div>
+          <h3 class="feature-title">AI Mock Interviews</h3>
+          <p class="feature-desc">
+            Practice with an AI interviewer that adapts to your level. Get
+            real-time feedback on technical and behavioral questions across 9+
+            categories.
+          </p>
+        </div>
+        <div class="glass-card feature-card" data-reveal data-delay="0.1">
+          <div class="feature-icon feature-icon-2">📄</div>
+          <h3 class="feature-title">Smart Resume Analyzer</h3>
+          <p class="feature-desc">
+            Upload your PDF or DOCX resume and get instant ATS score, keyword
+            analysis, and AI-powered improvement suggestions.
+          </p>
+        </div>
+        <div class="glass-card feature-card" data-reveal data-delay="0.2">
+          <div class="feature-icon feature-icon-3">🗺️</div>
+          <h3 class="feature-title">Personalized Career Roadmap</h3>
+          <p class="feature-desc">
+            Get a custom 6-month learning path from your current skills to your
+            target role, powered by Groq AI.
+          </p>
+        </div>
+        <div class="glass-card feature-card" data-reveal data-delay="0.1">
+          <div class="feature-icon feature-icon-4">📊</div>
+          <h3 class="feature-title">Career Radar Chart</h3>
+          <p class="feature-desc">
+            Visualize your skill strengths across technical skills,
+            communication, confidence, leadership, and problem solving.
+          </p>
+        </div>
+        <div class="glass-card feature-card" data-reveal data-delay="0.2">
+          <div class="feature-icon feature-icon-5">🎯</div>
+          <h3 class="feature-title">Skill Gap Analyzer</h3>
+          <p class="feature-desc">
+            Identify exactly what skills you're missing for your target role
+            with estimated learning timelines and resources.
+          </p>
+        </div>
+        <div class="glass-card feature-card" data-reveal data-delay="0.3">
+          <div class="feature-icon feature-icon-6">🏆</div>
+          <h3 class="feature-title">Achievement System</h3>
+          <p class="feature-desc">
+            Earn badges, build streaks, and level up your career XP as you
+            complete interviews, analyze resumes, and grow your skills.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- TESTIMONIALS -->
+    <section class="section" id="testimonials">
+      <div class="section-header">
+        <span class="section-label" data-reveal>Success Stories</span>
+        <h2 class="section-title" data-reveal data-delay="0.1">
+          What Our <span class="gradient-text">Users Say</span>
+        </h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="glass-card testimonial-card" data-reveal>
+          <p class="testimonial-text">
+            "CareerAI helped me prepare for my Google interview in just 3 weeks.
+            The AI mock interviews are incredibly realistic and the feedback was
+            spot-on!"
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AK</div>
+            <div>
+              <div class="testimonial-name">Arjun Kumar</div>
+              <div class="testimonial-role">Software Engineer @ Google</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card" data-reveal data-delay="0.1">
+          <p class="testimonial-text">
+            "The resume analyzer found keywords I was completely missing. My ATS
+            score went from 45% to 89% in one session. Landed 3 interviews the
+            next week!"
+          </p>
+          <div class="testimonial-author">
+            <div
+              class="testimonial-avatar"
+              style="
+                background: linear-gradient(135deg, var(--secondary), #0066ff);
+              "
+            >
+              PS
+            </div>
+            <div>
+              <div class="testimonial-name">Priya Sharma</div>
+              <div class="testimonial-role">Full Stack Developer @ Startup</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card testimonial-card" data-reveal data-delay="0.2">
+          <p class="testimonial-text">
+            "The 6-month roadmap feature is a game changer. It told me exactly
+            what to learn and in what order. Went from HTML beginner to Full
+            Stack in 5 months!"
+          </p>
+          <div class="testimonial-author">
+            <div
+              class="testimonial-avatar"
+              style="
+                background: linear-gradient(135deg, var(--accent), #ec4899);
+              "
+            >
+              MR
+            </div>
+            <div>
+              <div class="testimonial-name">Mohammed Rizwan</div>
+              <div class="testimonial-role">React Developer @ TechCorp</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="section-header">
+        <span class="section-label" data-reveal>Simple Process</span>
+        <h2 class="section-title" data-reveal data-delay="0.1">
+          How <span class="gradient-text">CareerAI Works</span>
+        </h2>
+        <p class="section-desc" data-reveal data-delay="0.2">
+          Get career-ready in four simple steps with AI guiding every step of
+          the way.
+        </p>
+      </div>
+      <div class="steps-grid">
+        <div class="glass-card step-card" data-reveal>
+          <div class="step-number">1</div>
+          <h3 class="step-title">Create Your Profile</h3>
+          <p class="step-desc">
+            Sign up and tell us your current skills and target role. Takes less
+            than 2 minutes.
+          </p>
+        </div>
+        <div class="glass-card step-card" data-reveal data-delay="0.1">
+          <div class="step-number">2</div>
+          <h3 class="step-title">Analyze & Assess</h3>
+          <p class="step-desc">
+            Upload your resume for AI analysis and take a skill assessment to
+            find your gaps.
+          </p>
+        </div>
+        <div class="glass-card step-card" data-reveal data-delay="0.2">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Practice & Improve</h3>
+          <p class="step-desc">
+            Practice mock interviews daily, get AI feedback, and follow your
+            personalized roadmap.
+          </p>
+        </div>
+        <div class="glass-card step-card" data-reveal data-delay="0.3">
+          <div class="step-number">4</div>
+          <h3 class="step-title">Land Your Dream Job</h3>
+          <p class="step-desc">
+            Track your progress, earn badges, and watch your career readiness
+            score hit 90%+.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <div class="section-header">
+        <span class="section-label" data-reveal>Got Questions?</span>
+        <h2 class="section-title" data-reveal data-delay="0.1">
+          Frequently <span class="gradient-text">Asked Questions</span>
+        </h2>
+      </div>
+      <div class="faq-list" data-reveal>
+        <div class="faq-item">
+          <div class="faq-question">
+            Is CareerAI completely free?<span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Yes! CareerAI is completely free. We use Groq's free tier for AI
+            features. All core features including mock interviews, resume
+            analysis, and career roadmap are available for free.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            What file formats does the resume analyzer support?<span
+              class="faq-icon"
+              >+</span
+            >
+          </div>
+          <div class="faq-answer">
+            We support PDF, DOCX (Microsoft Word), and TXT files up to 5MB. The
+            AI extracts text and analyzes it for ATS compatibility, keywords,
+            and improvement suggestions.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            How realistic are the AI mock interviews?<span class="faq-icon"
+              >+</span
+            >
+          </div>
+          <div class="faq-answer">
+            Very realistic! Our AI uses Groq to generate role-specific questions
+            based on real interview experiences. It adapts questions based on
+            your answers, just like a real interviewer would.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            How does the Career Roadmap work?<span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            You input your current skills and target role. Groq AI generates a
+            personalized 6-month learning plan with specific topics, resources,
+            milestones, and estimated timelines tailored to your profile.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            Can I use CareerAI on mobile?<span class="faq-icon">+</span>
+          </div>
+          <div class="faq-answer">
+            Absolutely! CareerAI is fully responsive and optimized for all
+            devices including Android and iOS. The mobile experience includes
+            bottom navigation, swipeable cards, and touch-friendly interfaces.
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">
+            What interview categories are available?<span class="faq-icon"
+              >+</span
+            >
+          </div>
+          <div class="faq-answer">
+            We cover Frontend, Backend, Full Stack, React, Node.js, Java,
+            Python, Data Science, and HR rounds across Beginner, Intermediate,
+            and Advanced difficulty levels.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section" data-reveal>
+      <div class="cta-inner">
+        <span class="section-label">Start Today</span>
+        <h2 class="cta-title">
+          Ready to <span class="gradient-text">Land Your Dream Job?</span>
+        </h2>
+        <p
+          style="color: var(--text-muted); margin: 16px 0 36px; font-size: 1rem"
+        >
+          Join thousands of developers already preparing smarter with AI.
+        </p>
+        <a
+          href="register.html"
+          class="btn btn-glow btn-lg"
+          style="font-size: 1.1rem; padding: 18px 48px"
+          >🚀 Start Preparing Free — No Credit Card</a
+        >
+        <p style="margin-top: 16px; font-size: 0.82rem; color: var(--text-dim)">
+          ✅ Free forever &nbsp;&nbsp; ✅ AI-powered &nbsp;&nbsp; ✅ No credit
+          card needed
+        </p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <div class="nav-logo" style="margin-bottom: 12px">
+            <div class="logo-icon">🚀</div>
+            <span
+              style="
+                font-family: var(--font-display);
+                font-size: 1.2rem;
+                font-weight: 800;
+              "
+              ><span class="gradient-text">Career</span>AI</span
+            >
+          </div>
+          <p>
+            Your AI-powered career operating system. Prepare smarter, grow
+            faster, land better.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="interview.html">Mock Interview</a></li>
+            <li><a href="resume.html">Resume Analyzer</a></li>
+            <li><a href="roadmap.html">Career Roadmap</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Features</h4>
+          <ul>
+            <li><a href="mentor.html">AI Mentor</a></li>
+            <li><a href="analytics.html">Analytics</a></li>
+            <li><a href="#">Question Bank</a></li>
+            <li><a href="#">Skill Analyzer</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 CareerAI. Built with ❤️ using Groq AI.</p>
+        <p style="color: var(--primary); font-size: 0.8rem">
+          🚀 v1.0.0 – Production Ready
+        </p>
+      </div>
+    </footer>
+
+    <!-- AI Mentor FAB -->
+    <div class="ai-mentor-fab">
+      <div class="fab-panel" id="mentorPanel">
+        <div class="fab-panel-header">
+          <span>🤖</span>
+          <span>AI Career Mentor</span>
+          <span
+            style="
+              margin-left: auto;
+              font-size: 0.75rem;
+              color: var(--text-muted);
+            "
+            >Powered by Groq</span
+          >
+        </div>
+        <div class="fab-messages" id="fabMessages"></div>
+        <div class="fab-input-row">
+          <input
+            class="fab-input"
+            id="fabInput"
+            placeholder="Ask me anything..."
+          />
+          <button class="fab-send" id="fabSend">➤</button>
+        </div>
+      </div>
+      <button class="fab-btn" id="mentorFab" aria-label="AI Mentor">🤖</button>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+      // Particles
+      document.addEventListener("DOMContentLoaded", () => {
+        initParticles(document.getElementById("heroParticles"));
+
+        // Animate hero counters when in view
+        observeElements("[data-count]", (el) => {
+          const target = parseFloat(el.dataset.count);
+          const suffix = el.dataset.suffix || "";
+          const isFloat = target % 1 !== 0;
+          let start = null;
+          const animate = (ts) => {
+            if (!start) start = ts;
+            const progress = Math.min((ts - start) / 2000, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const val = isFloat
+              ? (eased * target).toFixed(1)
+              : Math.floor(eased * target).toLocaleString();
+            el.textContent = val + suffix;
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        });
+
+        // Check if logged in, update nav
+        const user = Auth.user();
+        if (user) {
+          const actions = document.getElementById("navActions");
+          if (actions) {
+            actions.innerHTML = `
+          <div class="xp-badge">⚡ ${user.xp || 0} XP</div>
+          <a href="dashboard.html" class="btn btn-primary btn-sm">🏠 Dashboard</a>
+        `;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
