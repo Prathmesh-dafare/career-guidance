@@ -3,11 +3,19 @@
 // ============================================
 
 const API = {
-  // Auto-detects Node.js server (5000) vs VS Code Live Server
   BASE: (() => {
+    const hostname = window.location.hostname;
     const port = window.location.port;
-    if (port === "5500" || port === "5501") return "http://localhost:5000/api";
-    return "/api";
+
+    // Local development using VS Code Live Server
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      if (port === "5500" || port === "5501") {
+        return "http://localhost:5000/api";
+      }
+    }
+
+    // Production frontend on Netlify
+    return "https://career-guidance-1-zb06.onrender.com/api";
   })(),
 
   async request(method, path, data, token) {
