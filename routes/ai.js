@@ -10,6 +10,13 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
+const GROQ_MODELS = [
+  "groq/compound",
+  "openai/gpt-oss-20b",
+  "qwen/qwen3.6-27b",
+  "allam-2-7b",
+];
+
 function parseJsonFromRaw(raw) {
   const cleaned = String(raw)
     .replace(/```json|```/g, "")
@@ -24,22 +31,38 @@ async function callGroq(prompt, systemContext = "") {
     throw new Error("GROQ_API_KEY not configured");
   }
 
-  const completion = await groq.chat.completions.create({
-    model: "llama-3.3-70b-versatile",
-    temperature: 0.8,
-    messages: [
-      {
-        role: "system",
-        content: systemContext,
-      },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
+  let lastError;
 
-  return completion.choices[0].message.content;
+  for (const model of GROQ_MODELS) {
+    try {
+      const completion = await groq.chat.completions.create({
+        model,
+        temperature: 0.8,
+        messages: [
+          {
+            role: "system",
+            content: systemContext,
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = completion?.choices?.[0]?.message?.content;
+      if (!content) {
+        throw new Error("Empty response from Groq");
+      }
+
+      return content;
+    } catch (error) {
+      lastError = error;
+      console.warn(`Groq model ${model} failed:`, error?.message || error);
+    }
+  }
+
+  throw lastError || new Error("Groq API request failed");
 }
 
 // Demo responses when API key not set

@@ -192,6 +192,7 @@
                 <span>Password</span>
                 <a
                   href="#"
+                  id="forgotPasswordLink"
                   style="
                     color: var(--primary);
                     font-size: 0.78rem;
@@ -252,6 +253,29 @@
     <script>
       // Redirect if already logged in
       if (Auth.token()) window.location.href = "dashboard.html";
+
+      document
+        .getElementById("forgotPasswordLink")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          const email = prompt("Enter the email address for your account:");
+          if (!email || !/\S+@\S+\.\S+/.test(email.trim())) {
+            Toast.error("Please enter a valid email address.");
+            return;
+          }
+
+          try {
+            const data = await API.post("/auth/forgot-password", {
+              email: email.trim(),
+            });
+            Toast.info(
+              `${data.message} Temporary password: ${data.tempPassword}`,
+            );
+            console.log("Temporary password:", data.tempPassword);
+          } catch (err) {
+            Toast.error(err.message || "Password reset failed");
+          }
+        });
 
       document
         .getElementById("loginForm")

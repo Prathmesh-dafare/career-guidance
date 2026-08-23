@@ -1117,6 +1117,20 @@ footer {
   transition: all 0.3s ease;
 }
 
+select.form-input {
+  background: rgba(11, 18, 32, 0.95);
+  color: var(--text);
+  appearance: auto;
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+}
+
+select.form-input option {
+  background: rgba(11, 18, 32, 0.98);
+  color: var(--text);
+  padding: 10px 12px;
+}
+
 .form-input:focus {
   border-color: var(--primary);
   background: rgba(108, 99, 255, 0.08);

@@ -114,6 +114,7 @@
         </a>
         <ul class="nav-links">
           <li><a href="#features">✨ Features</a></li>
+          <li><a href="#demo">📊 Demo</a></li>
           <li><a href="#how">⚙️ How it Works</a></li>
           <li><a href="#faq">❓ FAQ</a></li>
         </ul>
@@ -156,6 +157,7 @@
         </div>
         <nav style="display: flex; flex-direction: column; gap: 4px">
           <a href="#features" class="sidebar-link">✨ Features</a>
+          <a href="#demo" class="sidebar-link">📊 Demo</a>
           <a href="#how" class="sidebar-link">⚙️ How it Works</a>
           <a href="#faq" class="sidebar-link">❓ FAQ</a>
         </nav>
@@ -208,6 +210,7 @@
           <a href="register.html" class="btn btn-glow btn-lg"
             >🚀 Start Preparing Free</a
           >
+          <a href="#demo" class="btn btn-secondary btn-lg">📊 See Demo</a>
         </div>
         <div class="hero-stats" data-reveal data-delay="0.4">
           <div class="hero-stat">
@@ -318,6 +321,127 @@
       </div>
     </section>
 
+    <!-- INTERACTIVE DEMO -->
+    <section class="section" id="demo">
+      <div class="section-header">
+        <span class="section-label" data-reveal>Live Preview</span>
+        <h2 class="section-title" data-reveal data-delay="0.1">
+          See Your <span class="gradient-text">AI Dashboard</span>
+        </h2>
+        <p class="section-desc" data-reveal data-delay="0.2">
+          Watch how CareerAI analyzes and tracks your complete career readiness
+          in real time.
+        </p>
+      </div>
+      <div class="demo-section glass" data-reveal>
+        <p style="color: var(--text-muted); font-size: 0.88rem">
+          📊 Live Analytics Preview
+        </p>
+        <h3 style="font-size: 1.8rem; margin: 12px 0">
+          Your Career Readiness Dashboard
+        </h3>
+        <div class="demo-stats">
+          <div class="demo-stat-card">
+            <div class="demo-stat-number gradient-text" id="demoResume">0%</div>
+            <div class="demo-stat-label">📄 Resume Score</div>
+            <div
+              style="
+                margin-top: 12px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.06);
+                border-radius: 2px;
+                overflow: hidden;
+              "
+            >
+              <div
+                style="
+                  height: 100%;
+                  width: 0%;
+                  background: linear-gradient(
+                    90deg,
+                    var(--primary),
+                    var(--secondary)
+                  );
+                  border-radius: 2px;
+                  transition: width 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                "
+                id="demoResumeBar"
+              ></div>
+            </div>
+          </div>
+          <div class="demo-stat-card">
+            <div
+              class="demo-stat-number"
+              style="
+                background: linear-gradient(135deg, var(--secondary), #0066ff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+              "
+              id="demoInterview"
+            >
+              0%
+            </div>
+            <div class="demo-stat-label">🎙️ Interview Score</div>
+            <div
+              style="
+                margin-top: 12px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.06);
+                border-radius: 2px;
+                overflow: hidden;
+              "
+            >
+              <div
+                style="
+                  height: 100%;
+                  width: 0%;
+                  background: linear-gradient(90deg, var(--secondary), #0066ff);
+                  border-radius: 2px;
+                  transition: width 2.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+                "
+                id="demoInterviewBar"
+              ></div>
+            </div>
+          </div>
+          <div class="demo-stat-card">
+            <div
+              class="demo-stat-number"
+              style="
+                background: linear-gradient(135deg, var(--accent), #ec4899);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+              "
+              id="demoReady"
+            >
+              0%
+            </div>
+            <div class="demo-stat-label">⚡ Career Readiness</div>
+            <div
+              style="
+                margin-top: 12px;
+                height: 4px;
+                background: rgba(255, 255, 255, 0.06);
+                border-radius: 2px;
+                overflow: hidden;
+              "
+            >
+              <div
+                style="
+                  height: 100%;
+                  width: 0%;
+                  background: linear-gradient(90deg, var(--accent), #ec4899);
+                  border-radius: 2px;
+                  transition: width 2.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                "
+                id="demoReadyBar"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- TESTIMONIALS -->
     <section class="section" id="testimonials">
@@ -647,6 +771,41 @@
           };
           requestAnimationFrame(animate);
         });
+
+        // Demo stats animation
+        observeElements(
+          "#demoResume",
+          () => {
+            setTimeout(() => {
+              animateCounter(
+                document.getElementById("demoResume"),
+                87,
+                1800,
+                "%",
+              );
+              document.getElementById("demoResumeBar").style.width = "87%";
+              setTimeout(() => {
+                animateCounter(
+                  document.getElementById("demoInterview"),
+                  92,
+                  2000,
+                  "%",
+                );
+                document.getElementById("demoInterviewBar").style.width = "92%";
+                setTimeout(() => {
+                  animateCounter(
+                    document.getElementById("demoReady"),
+                    89,
+                    2200,
+                    "%",
+                  );
+                  document.getElementById("demoReadyBar").style.width = "89%";
+                }, 300);
+              }, 200);
+            }, 100);
+          },
+          0.3,
+        );
 
         // Check if logged in, update nav
         const user = Auth.user();

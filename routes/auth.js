@@ -32,6 +32,71 @@ const generateToken = (user) => {
 // Demo users for when DB is not connected
 const demoUsers = new Map();
 
+// Forgot password
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    const normalizedEmail = String(email).trim().toLowerCase();
+
+    if (User && require("mongoose").connection.readyState === 1) {
+      const user = await User.findOne({ email: normalizedEmail });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ error: "No account found with that email" });
+      }
+
+      const temporaryPassword = `CareerAI-${Math.random()
+        .toString(36)
+        .slice(-8)}`;
+      user.password = temporaryPassword;
+      await user.save();
+
+      return res.json({
+        message:
+          "Temporary password generated. Sign in with it, then change your password from the profile settings.",
+        tempPassword: temporaryPassword,
+      });
+    }
+
+    const stored =
+      demoUsers.get(normalizedEmail) ||
+      (normalizedEmail === "demo@careerai.com"
+        ? {
+            id: "demo123",
+            name: "Demo User",
+            email: normalizedEmail,
+            password: "demo123",
+          }
+        : null);
+
+    if (!stored) {
+      return res
+        .status(404)
+        .json({ error: "No account found with that email" });
+    }
+
+    const temporaryPassword = `CareerAI-${Math.random()
+      .toString(36)
+      .slice(-8)}`;
+    stored.password = temporaryPassword;
+    demoUsers.set(normalizedEmail, stored);
+
+    return res.json({
+      message:
+        "Temporary password generated. Sign in with it, then change your password from the profile settings.",
+      tempPassword: temporaryPassword,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Register
 router.post("/register", async (req, res) => {
   try {
