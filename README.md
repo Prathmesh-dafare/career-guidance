@@ -235,4 +235,4 @@ MIT License — free to use, modify, and distribute.
 
 ---
 
-Built with ❤️ using Google Gemini AI | Ready for Product Hunt 🚀
+Built with ❤️ using Google Gemini AI | Ready for Product Hunt ..................................🚀
